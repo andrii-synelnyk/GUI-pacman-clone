@@ -7,8 +7,8 @@ import Controller.A_GameController;
 public class Main {
     public static void main(String[] args) {
         // Prompt the user for the desired board size
-        int rows = promptBoardSize("Enter the number of rows (10 to 100):");
-        int columns = promptBoardSize("Enter the number of columns (10 to 100):");
+        int rows = promptBoardSize("Enter the number of rows/columns (10 to 100):");
+        int columns = rows;
 
         // Create the game model, view, and controller
         A_GameModel gameModel = new A_GameModel(rows, columns);
