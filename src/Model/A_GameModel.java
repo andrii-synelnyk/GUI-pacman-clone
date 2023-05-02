@@ -17,6 +17,6 @@ public class A_GameModel {
     public JTable getGameBoard() {
         return gameBoard.getTable();
     }
-
+    
     // GameBoard class remains the same as before, but make it a static inner class
 }

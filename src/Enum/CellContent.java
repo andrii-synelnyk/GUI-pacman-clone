@@ -6,5 +6,5 @@ public enum CellContent {
     PLAYER,
     ENEMY,
     POWER_UP,
-    FOOD
+    FOOD,
 }

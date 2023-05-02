@@ -1,5 +1,7 @@
 package View;
 
+import Model.Pacman;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -7,7 +9,7 @@ public class GameWindow extends JFrame {
     private JTable gameTable;
     private int imageSize = 40;
 
-    public GameWindow(JTable gameBoard) {
+    public GameWindow(JTable gameBoard, VPacman vPacman) {
         setTitle("Pacman Game");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -35,9 +37,12 @@ public class GameWindow extends JFrame {
         setVisible(true);
 
         // Set up the custom cell renderer
-        PacmanTableCellRenderer cellRenderer = new PacmanTableCellRenderer();
+        PacmanTableCellRenderer cellRenderer = new PacmanTableCellRenderer(vPacman);
         gameTable.setDefaultRenderer(Object.class, cellRenderer);
     }
 
+    public void redrawBoard() {
+        gameTable.repaint();
+    }
 
 }
