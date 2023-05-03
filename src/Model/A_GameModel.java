@@ -10,9 +10,12 @@ import Enum.CellContent;
 public class A_GameModel {
     private GameBoard gameBoard;
 
+    private int score;
+
     public A_GameModel(int rows, int columns) {
         this.gameBoard = new GameBoard(rows, columns, this);
         System.out.println("Created gameboard");
+        this.score = 0;
     }
 
     // Add methods to manage game objects (player, enemies, power-ups, etc.)
@@ -25,33 +28,17 @@ public class A_GameModel {
         new Thread(() -> {
             while (characterWhoCalled.getIsRunning()) {
                 try {
+                    System.out.println(score);
                     Thread.sleep(250);
                     if (characterWhoCalled.direction != null) {
-                        int newRow = gameBoard.getCharacterCell(characterWhoCalled).getRow();
-                        int newCol = gameBoard.getCharacterCell(characterWhoCalled).getColumn();
+                        Point newPosition = getNewPosition(characterWhoCalled);
+                        int newRow = newPosition.x;
+                        int newCol = newPosition.y;
 
-                        switch (characterWhoCalled.direction) {
-                            case UP -> newRow -= 1;
-                            case DOWN -> newRow += 1;
-                            case LEFT -> newCol -= 1;
-                            case RIGHT -> newCol += 1;
-                        }
-
-                        Object saveCellContent = gameBoard.getCharacterCell(characterWhoCalled).getContentUnderneath(); // Save content of cell to recover when character moves further
-
-                        // Check if the next cell is not a wall
                         if (gameBoard.getCell(newRow, newCol).getContent() != CellContent.WALL) {
-                            if (characterWhoCalled.getType() == CellContent.PLAYER) {
-                                gameBoard.getCharacterCell(characterWhoCalled).setEaten(); // Pacman has eaten food
-                            }
-                            else {
-                                gameBoard.getCharacterCell(characterWhoCalled).setContent(saveCellContent); // If not Pacman leave food or power-up where it was
-                            }
-                            gameBoard.setCharacterCell(characterWhoCalled, newRow, newCol, characterWhoCalled.getType()); // Move character to next cell
-                        }else {
-                            if (characterWhoCalled.getType() == CellContent.ENEMY){ // if current instance of Character is enemy and next cell it plans to go to is wall..
-                                characterWhoCalled.changeDirection(); // then change direction
-                            }
+                            updateCharacterPosition(characterWhoCalled, newRow, newCol);
+                        } else if (characterWhoCalled.getType() == CellContent.ENEMY) { // if character is enemy and the next cell is WALL
+                            characterWhoCalled.changeDirection(); // then change direction
                         }
                     }
                 } catch (InterruptedException e) {
@@ -59,5 +46,38 @@ public class A_GameModel {
                 }
             }
         }).start();
+    }
+
+    private Point getNewPosition(Character characterWhoCalled) {
+        int newRow = gameBoard.getCharacterCell(characterWhoCalled).getRow();
+        int newCol = gameBoard.getCharacterCell(characterWhoCalled).getColumn();
+
+        switch (characterWhoCalled.direction) {
+            case UP -> newRow -= 1;
+            case DOWN -> newRow += 1;
+            case LEFT -> newCol -= 1;
+            case RIGHT -> newCol += 1;
+        }
+
+        return new Point(newRow, newCol);
+    }
+
+    private void updateCharacterPosition(Character characterWhoCalled, int newRow, int newCol) {
+        Object saveCellContent = gameBoard.getCharacterCell(characterWhoCalled).getContentUnderneath();
+
+        if (characterWhoCalled.getType() == CellContent.PLAYER) {
+            gameBoard.getCharacterCell(characterWhoCalled).setEaten();
+            if (gameBoard.getCell(newRow, newCol).getContent() == CellContent.FOOD) {
+                increaseScoreBy(1);
+            }
+        } else {
+            gameBoard.getCharacterCell(characterWhoCalled).setContent(saveCellContent);
+        }
+
+        gameBoard.setCharacterCell(characterWhoCalled, newRow, newCol, characterWhoCalled.getType());
+    }
+
+    public void increaseScoreBy(int increaseFactor){
+        score += increaseFactor;
     }
 }
