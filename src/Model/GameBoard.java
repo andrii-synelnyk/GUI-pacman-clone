@@ -26,11 +26,13 @@ public class GameBoard extends AbstractTableModel {
         private int row;
         private int column;
         private Object content;
+        private Object contentUnderneath;
 
         public Cell(int row, int column, Object content) {
             this.row = row;
             this.column = column;
             this.content = content;
+            this.contentUnderneath = content;
         }
 
         public Object getContent() {
@@ -48,6 +50,10 @@ public class GameBoard extends AbstractTableModel {
 
         public int getColumn(){
             return column;
+        }
+
+        public Object getContentUnderneath(){
+            return contentUnderneath;
         }
     }
 
@@ -102,7 +108,7 @@ public class GameBoard extends AbstractTableModel {
         //board[rows - 2][columns - 2] = new Cell(rows - 2, columns - 2, CellContent.ENEMY);
 
         // Place power-ups (use a loop to place multiple power-ups)
-        board[1][columns - 2] = new Cell(1, columns - 2, CellContent.POWER_UP);
+        board[rows - 2][columns - 5] = new Cell(rows - 2, columns - 5, CellContent.POWER_UP);
     }
 
     public void setCharacterCell(Character character, int row, int column, CellContent content) {

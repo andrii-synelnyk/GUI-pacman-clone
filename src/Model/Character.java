@@ -35,7 +35,7 @@ public abstract class Character {
                             case RIGHT -> newCol += 1;
                         }
 
-                        Object saveCellContent = gameBoard.getCell(newRow, newCol).getContent();
+                        Object saveCellContent = gameBoard.getCharacterCell(this).getContentUnderneath(); // Save content of cell to recover when character moves further
 
                         // Check if the next cell is not a wall
                         if (gameBoard.getCell(newRow, newCol).getContent() != CellContent.WALL) {
@@ -45,7 +45,7 @@ public abstract class Character {
                             else {
                                 gameBoard.getCharacterCell(this).setContent(saveCellContent); // If not Pacman leave food or power-up where it was
                             }
-                            gameBoard.setCharacterCell(this, newRow, newCol, this.getCellContent());
+                            gameBoard.setCharacterCell(this, newRow, newCol, this.getCellContent()); // Move character to next cell
                         }else {
                             if (getCellContent() == CellContent.ENEMY){ // if current instance of Character is enemy and next cell it plans to go to is wall..
                                 this.changeDirection(); // then change direction
