@@ -43,6 +43,11 @@ public class GameBoard extends AbstractTableModel {
             this.content = content;
         }
 
+        public void setEaten(){
+            this.content = CellContent.EMPTY;
+            this.contentUnderneath = CellContent.EMPTY;
+        }
+
         // Getters and setters for row, column, and content
         public int getRow(){
             return row;

@@ -3,13 +3,14 @@ package Model;
 import Enum.Direction;
 import Enum.CellContent;
 
+import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
+
+import Model.GameBoard.Cell;
 
 public class Enemy extends Character{
 
     private boolean isRunning = true;
-
-    private GameBoard gameBoard;
 
     public Enemy(GameBoard gameBoard) {
 
@@ -29,14 +30,28 @@ public class Enemy extends Character{
     }
 
     @Override
-    public void changeDirection(){
-        int nextDirection = ThreadLocalRandom.current().nextInt(0, 4 + 1);
-        switch (nextDirection){
-            case 0 -> direction = Direction.UP;
-            case 1 -> direction = Direction.DOWN;
-            case 2 -> direction = Direction.LEFT;
-            case 3 -> direction = Direction.RIGHT;
+    public void changeDirection() {
+
+        ArrayList<Direction> availableDirections = new ArrayList<>();
+
+        Cell currentCharacterCell = gameBoard.getCharacterCell(this);
+
+        if (gameBoard.getCell(currentCharacterCell.getRow() - 1, currentCharacterCell.getColumn()).getContent() != CellContent.WALL)
+            availableDirections.add(Direction.UP);
+
+        if (gameBoard.getCell(currentCharacterCell.getRow() + 1, currentCharacterCell.getColumn()).getContent() != CellContent.WALL)
+            availableDirections.add(Direction.DOWN);
+
+        if (gameBoard.getCell(currentCharacterCell.getRow(), currentCharacterCell.getColumn() + 1).getContent() != CellContent.WALL)
+            availableDirections.add(Direction.RIGHT);
+
+        if (gameBoard.getCell(currentCharacterCell.getRow(), currentCharacterCell.getColumn() - 1).getContent() != CellContent.WALL)
+            availableDirections.add(Direction.LEFT);
+
+        if (!availableDirections.isEmpty()) {
+            direction = availableDirections.get(ThreadLocalRandom.current().nextInt(0, availableDirections.size()));
         }
+
     }
 
     public CellContent getCellContent(){

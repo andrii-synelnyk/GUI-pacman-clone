@@ -40,7 +40,7 @@ public abstract class Character {
                         // Check if the next cell is not a wall
                         if (gameBoard.getCell(newRow, newCol).getContent() != CellContent.WALL) {
                             if (getCellContent() == CellContent.PLAYER) {
-                                gameBoard.getCharacterCell(this).setContent(CellContent.EMPTY); // Pacman has eaten food
+                                gameBoard.getCharacterCell(this).setEaten(); // Pacman has eaten food
                             }
                             else {
                                 gameBoard.getCharacterCell(this).setContent(saveCellContent); // If not Pacman leave food or power-up where it was

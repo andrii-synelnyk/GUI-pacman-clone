@@ -9,8 +9,6 @@ public class Pacman extends Character{
 
     private boolean isRunning = true;
 
-    private GameBoard gameBoard;
-
     public Pacman(GameBoard gameBoard) {
 
         super(gameBoard);
