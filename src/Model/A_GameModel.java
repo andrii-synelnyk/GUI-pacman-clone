@@ -28,8 +28,7 @@ public class A_GameModel {
         new Thread(() -> {
             while (characterWhoCalled.getIsRunning()) {
                 try {
-                    System.out.println(score);
-                    Thread.sleep(250);
+                    Thread.sleep(characterWhoCalled.timeInterval);
                     if (characterWhoCalled.direction != null) {
                         Point newPosition = getNewPosition(characterWhoCalled);
                         int newRow = newPosition.x;
@@ -69,6 +68,16 @@ public class A_GameModel {
             gameBoard.getCharacterCell(characterWhoCalled).setEaten(); // remove sprite of object Pacman moved through
             if (gameBoard.getCell(newRow, newCol).getContent() == CellContent.FOOD) { // If the cell pacman moved to is food, then increase score
                 increaseScoreBy(1);
+            }else if (gameBoard.getCell(newRow, newCol).getContent() == CellContent.POWER_UP){ // Give Pacman higher speed for 5 sec
+                new Thread(() -> {
+                    characterWhoCalled.timeInterval = 150;
+                    try {
+                        Thread.sleep(7000);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    characterWhoCalled.timeInterval = 300;
+                }).start();
             }
         } else {
             gameBoard.getCharacterCell(characterWhoCalled).setContent(saveCellContent);

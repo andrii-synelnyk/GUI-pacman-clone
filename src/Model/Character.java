@@ -10,12 +10,14 @@ public abstract class Character {
     protected GameBoard gameBoard;
 
     protected A_GameModel gameModel;
+    protected int timeInterval;
 
     public Character(GameBoard gameBoard) {
         this.gameBoard = gameBoard;
         direction = Direction.LEFT; // RANDOMISE IF NOT PACMAN
 
         gameModel = gameBoard.getGameModel();
+        this.timeInterval = 300;
         gameModel.moveCharacter(this); // Start checking for change in direction
     }
 
