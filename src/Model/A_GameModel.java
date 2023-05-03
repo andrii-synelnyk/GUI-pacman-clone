@@ -9,7 +9,7 @@ public class A_GameModel {
     private GameBoard gameBoard;
 
     public A_GameModel(int rows, int columns) {
-        this.gameBoard = new GameBoard(rows, columns);
+        this.gameBoard = new GameBoard(rows, columns, this);
     }
 
     // Add methods to manage game objects (player, enemies, power-ups, etc.)

@@ -3,7 +3,7 @@ package Model;
 import Enum.Direction;
 import Enum.CellContent;
 
-public class Pacman {
+public class Pacman extends Character{
     private int mouthOpened = 0;
     private boolean mouthFullyOpened = true;
 
@@ -12,9 +12,9 @@ public class Pacman {
     private Direction direction = Direction.RIGHT;
     private GameBoard gameBoard;
 
-    public Pacman(A_GameModel gameModel) {
+    public Pacman(GameBoard gameBoard) {
 
-        gameBoard = gameModel.getGameBoard();
+        super(gameBoard);
 
         new Thread(() -> {
             while (isRunning) {
@@ -30,47 +30,13 @@ public class Pacman {
             }
         }).start();
 
-        move(); // Start checking for change in direction
     }
 
     public int getMouthOpened() {
         return mouthOpened;
     }
 
-    public void move() {
-        new Thread(() -> {
-            while (isRunning) {
-                try {
-                    Thread.sleep(250);
-                    if (direction != null) {
-                        int newRow = gameBoard.getPacmanCell().getRow();
-                        int newCol = gameBoard.getPacmanCell().getColumn();
-
-                        switch (direction) {
-                            case UP -> newRow -= 1;
-                            case DOWN -> newRow += 1;
-                            case LEFT -> newCol -= 1;
-                            case RIGHT -> newCol += 1;
-                        }
-
-                        // Check if the next cell is not a wall
-                        if (gameBoard.getCell(newRow, newCol).getContent() != CellContent.WALL) {
-                            gameBoard.getPacmanCell().setContent(CellContent.EMPTY);
-                            gameBoard.setPacmanCell(newRow, newCol);
-                        }
-                    }
-                } catch (InterruptedException e) {
-                    isRunning = false;
-                }
-            }
-        }).start();
-    }
-
-    public Direction getDirection(){
-        return direction;
-    }
-
-    public void setDirection(Direction direction){
-        this.direction = direction;
+    public CellContent getCellContent(){
+        return CellContent.PLAYER;
     }
 }

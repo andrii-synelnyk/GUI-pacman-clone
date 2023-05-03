@@ -22,13 +22,13 @@ public class A_GameController {
         this.gameModel = gameModel;
         this.gameView = gameView;
 
+        this.pacman = gameModel.getGameBoard().getPacman();
         // Add listeners to handle user input and update the model and view accordingly
         startGame();
     }
 
     public void startGame(){
 
-        pacman = new Pacman(gameModel);
         pacmanView = new PacmanView(40, 40, pacman);
 
         // Create game board

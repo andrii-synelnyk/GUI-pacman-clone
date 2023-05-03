@@ -4,13 +4,20 @@ import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import Enum.CellContent;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class GameBoard extends AbstractTableModel {
     private int rows;
     private int columns;
     private Cell[][] board;
     private JTable table;
 
-    private Cell pacmanCell;
+    private Map<Character, Cell> characterCells;
+
+    private A_GameModel gameModel;
+
+    private Pacman pacman;
 
     // Inner class representing a cell in the game board
     public class Cell {
@@ -42,11 +49,15 @@ public class GameBoard extends AbstractTableModel {
         }
     }
 
-    public GameBoard(int rows, int columns) {
+    public GameBoard(int rows, int columns, A_GameModel gameModel) {
         this.rows = rows;
         this.columns = columns;
         this.board = new Cell[rows][columns];
         this.table = new JTable(this);
+
+        this.gameModel = gameModel;
+
+        characterCells = new HashMap<>();
 
         table.setFocusable(false);
 
@@ -79,8 +90,8 @@ public class GameBoard extends AbstractTableModel {
         }
 
         // Place the player
-        board[1][1] = new Cell(1, 1, CellContent.PLAYER);
-        pacmanCell = board[1][1];
+        pacman = new Pacman(this);
+        setCharacterCell(pacman, 1, 1, pacman.getCellContent());
 
         // Place enemies (use a loop to place multiple enemies)
         board[rows - 2][columns - 2] = new Cell(rows - 2, columns - 2, CellContent.ENEMY);
@@ -89,17 +100,21 @@ public class GameBoard extends AbstractTableModel {
         board[1][columns - 2] = new Cell(1, columns - 2, CellContent.POWER_UP);
     }
 
-    public void setPacmanCell(int row, int column){
-        board[row][column].setContent(CellContent.PLAYER);
-        pacmanCell = board[row][column];
+    public void setCharacterCell(Character character, int row, int column, CellContent content) {
+        board[row][column].setContent(content);
+        characterCells.put(character, board[row][column]);
     }
 
-    public Cell getPacmanCell(){
-        return pacmanCell;
+    public Cell getCharacterCell(Character character) {
+        return characterCells.get(character);
     }
 
     public Cell getCell(int row, int column){
         return board[row][column];
+    }
+
+    public Pacman getPacman(){
+        return pacman;
     }
 
     @Override
