@@ -19,6 +19,8 @@ public class GameBoard extends AbstractTableModel {
 
     private Pacman pacman;
 
+    private Enemy enemy;
+
     // Inner class representing a cell in the game board
     public class Cell {
         private int row;
@@ -94,7 +96,10 @@ public class GameBoard extends AbstractTableModel {
         setCharacterCell(pacman, 1, 1, pacman.getCellContent());
 
         // Place enemies (use a loop to place multiple enemies)
-        board[rows - 2][columns - 2] = new Cell(rows - 2, columns - 2, CellContent.ENEMY);
+        enemy = new Enemy(this);
+        setCharacterCell(enemy, rows - 2, columns - 2, enemy.getCellContent()); // MAKE A LOOP TO CREATE MULTIPLE ENEMIES, FIGURE OUT HOW TO KNOW WHERE TO SPAWN
+
+        //board[rows - 2][columns - 2] = new Cell(rows - 2, columns - 2, CellContent.ENEMY);
 
         // Place power-ups (use a loop to place multiple power-ups)
         board[1][columns - 2] = new Cell(1, columns - 2, CellContent.POWER_UP);

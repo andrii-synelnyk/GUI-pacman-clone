@@ -9,7 +9,6 @@ public class Pacman extends Character{
 
     private boolean isRunning = true;
 
-    private Direction direction = Direction.RIGHT;
     private GameBoard gameBoard;
 
     public Pacman(GameBoard gameBoard) {
