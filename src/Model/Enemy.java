@@ -54,7 +54,7 @@ public class Enemy extends Character{
 
     }
 
-    public CellContent getCellContent(){
+    public CellContent getType(){
         return CellContent.ENEMY;
     }
 }

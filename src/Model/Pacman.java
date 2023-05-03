@@ -33,7 +33,7 @@ public class Pacman extends Character{
         return mouthOpened;
     }
 
-    public CellContent getCellContent(){
+    public CellContent getType(){
         return CellContent.PLAYER;
     }
 }

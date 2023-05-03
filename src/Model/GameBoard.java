@@ -104,11 +104,11 @@ public class GameBoard extends AbstractTableModel {
 
         // Place the player
         pacman = new Pacman(this);
-        setCharacterCell(pacman, 1, 1, pacman.getCellContent());
+        setCharacterCell(pacman, 1, 1, pacman.getType());
 
         // Place enemies (use a loop to place multiple enemies)
         enemy = new Enemy(this);
-        setCharacterCell(enemy, rows - 2, columns - 2, enemy.getCellContent()); // MAKE A LOOP TO CREATE MULTIPLE ENEMIES, FIGURE OUT HOW TO KNOW WHERE TO SPAWN
+        setCharacterCell(enemy, rows - 2, columns - 2, enemy.getType()); // MAKE A LOOP TO CREATE MULTIPLE ENEMIES, FIGURE OUT HOW TO KNOW WHERE TO SPAWN
 
         //board[rows - 2][columns - 2] = new Cell(rows - 2, columns - 2, CellContent.ENEMY);
 
@@ -127,6 +127,10 @@ public class GameBoard extends AbstractTableModel {
 
     public Cell getCell(int row, int column){
         return board[row][column];
+    }
+
+    public A_GameModel getGameModel(){
+        return gameModel;
     }
 
     public Pacman getPacman(){
