@@ -4,8 +4,11 @@ import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import Enum.CellContent;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class GameBoard extends AbstractTableModel {
     private int rows;
@@ -85,7 +88,7 @@ public class GameBoard extends AbstractTableModel {
             }
         }
 
-        // Initialize the outer walls
+        // Initialize the outer walls (rewrite cells which were originally occupied by food)
         for (int row = 0; row < rows; row++) {
             board[row][0] = new Cell(row, 0, CellContent.WALL);
             board[row][columns - 1] = new Cell(row, columns - 1, CellContent.WALL);
@@ -107,10 +110,13 @@ public class GameBoard extends AbstractTableModel {
         setCharacterCell(pacman, 1, 1, pacman.getType());
 
         // Place enemies (use a loop to place multiple enemies)
-        enemy = new Enemy(this);
-        setCharacterCell(enemy, rows - 2, columns - 2, enemy.getType()); // MAKE A LOOP TO CREATE MULTIPLE ENEMIES, FIGURE OUT HOW TO KNOW WHERE TO SPAWN
+        int numberOfEnemies = 5; // Set the desired number of enemies
+        for (int i = 0; i < numberOfEnemies; i++) {
+            enemy = new Enemy(this);
+            Cell emptyCell = getRandomEmptyCell();
+            setCharacterCell(enemy, emptyCell.getRow(), emptyCell.getColumn(), enemy.getType());
+        }
 
-        //board[rows - 2][columns - 2] = new Cell(rows - 2, columns - 2, CellContent.ENEMY);
 
         // Place power-ups (use a loop to place multiple power-ups)
         board[rows - 2][columns - 5] = new Cell(rows - 2, columns - 5, CellContent.POWER_UP);
@@ -135,6 +141,25 @@ public class GameBoard extends AbstractTableModel {
 
     public Pacman getPacman(){
         return pacman;
+    }
+
+    private Cell getRandomEmptyCell() {
+        List<Cell> emptyCells = new ArrayList<>();
+
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < columns; col++) {
+                if (board[row][col].getContent() == CellContent.FOOD) {
+                    emptyCells.add(board[row][col]);
+                }
+            }
+        }
+
+        if (!emptyCells.isEmpty()) {
+            int randomIndex = ThreadLocalRandom.current().nextInt(0, emptyCells.size());
+            return emptyCells.get(randomIndex);
+        } else {
+            throw new IllegalStateException("No empty cells available to place an enemy.");
+        }
     }
 
     @Override

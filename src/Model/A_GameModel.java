@@ -66,15 +66,15 @@ public class A_GameModel {
         Object saveCellContent = gameBoard.getCharacterCell(characterWhoCalled).getContentUnderneath();
 
         if (characterWhoCalled.getType() == CellContent.PLAYER) {
-            gameBoard.getCharacterCell(characterWhoCalled).setEaten();
-            if (gameBoard.getCell(newRow, newCol).getContent() == CellContent.FOOD) {
+            gameBoard.getCharacterCell(characterWhoCalled).setEaten(); // remove sprite of object Pacman moved through
+            if (gameBoard.getCell(newRow, newCol).getContent() == CellContent.FOOD) { // If the cell pacman moved to is food, then increase score
                 increaseScoreBy(1);
             }
         } else {
             gameBoard.getCharacterCell(characterWhoCalled).setContent(saveCellContent);
         }
 
-        gameBoard.setCharacterCell(characterWhoCalled, newRow, newCol, characterWhoCalled.getType());
+        gameBoard.setCharacterCell(characterWhoCalled, newRow, newCol, characterWhoCalled.getType()); // Move character sprite to next cell
     }
 
     public void increaseScoreBy(int increaseFactor){
