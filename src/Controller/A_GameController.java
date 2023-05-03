@@ -3,13 +3,20 @@ package Controller;
 import Model.A_GameModel;
 import Model.Pacman;
 import View.A_GameView;
-import View.VPacman;
+import View.PacmanView;
 
 import javax.swing.*;
+
+import Enum.Direction;
+
+import java.awt.*;
 
 public class A_GameController {
     private final A_GameModel gameModel;
     private final A_GameView gameView;
+
+    Pacman pacman;
+    PacmanView pacmanView;
 
     public A_GameController(A_GameModel gameModel, A_GameView gameView) {
         this.gameModel = gameModel;
@@ -21,14 +28,17 @@ public class A_GameController {
 
     public void startGame(){
 
-        Pacman pacman = new Pacman();
-        VPacman vPacman = new VPacman(40, 40, pacman);
+        pacman = new Pacman(gameModel);
+        pacmanView = new PacmanView(40, 40, pacman);
 
         // Create game board
-        JTable newGameBoard = gameModel.getGameBoard();
-        gameView.showGameWindow(newGameBoard, vPacman);
+        JTable newGameBoard = gameModel.getGameBoard().getTable();
+        gameView.showGameWindow(newGameBoard, pacmanView);
 
         notifyViewToRedrawBoard();
+
+        KeyController keyController = new KeyController(this);
+        gameView.getGameWindow().addKeyListener(keyController);
     }
 
     public void notifyViewToRedrawBoard(){
@@ -41,8 +51,23 @@ public class A_GameController {
                     throw new RuntimeException(e);
                 }
                 gameView.redrawGameBoard();
+
+//                KeyboardFocusManager keyboardFocusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+//
+//                // Get the component that currently has focus
+//                Component focusedComponent = keyboardFocusManager.getFocusOwner();
+//
+//                // Print the focused component
+//                System.out.println("Focused component: " + focusedComponent);
             }
         }).start();
+
+    }
+
+    public void movePacman(Direction direction) {
+        pacman.setDirection(direction);
+        // Notify the View to update the display after moving the Pacman
+        gameView.redrawGameBoard();
     }
     // Add methods to manage game state and handle events like collisions or power-up activations
 }

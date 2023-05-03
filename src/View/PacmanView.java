@@ -6,17 +6,15 @@ import Model.Pacman;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.ImageObserver;
-import java.text.AttributedCharacterIterator;
 
-public class VPacman implements Icon {
+public class PacmanView implements Icon {
 
     private int width;
     private int height;
 
     private Pacman pacman;
 
-    public VPacman(int width, int height, Pacman pacman) {
+    public PacmanView(int width, int height, Pacman pacman) {
         this.width = width;
         this.height = height;
 
@@ -25,7 +23,7 @@ public class VPacman implements Icon {
 
     public void paintIcon(Component c, Graphics g, int x, int y) {
         g.setColor(Color.YELLOW);
-        g.fillArc(x, y, width, height, pacman.getMouthOpened()/2, 360 - pacman.getMouthOpened());
+        g.fillArc(x, y, width, height, pacman.getMouthOpened()/2 + pacman.getDirection().getDirectionMultiplier(), 360 - pacman.getMouthOpened());
     }
 
     @Override

@@ -5,15 +5,14 @@ import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 
 import Enum.CellContent;
-import Model.Pacman;
 
-public class PacmanTableCellRenderer extends DefaultTableCellRenderer {
+public class CustomTableCellRenderer extends DefaultTableCellRenderer {
 
     private ImageIcon wallImage, playerImage, enemyImage, powerupImage, foodImage;
 
-    private VPacman vPacman;
+    private PacmanView pacmanView;
 
-    public PacmanTableCellRenderer(VPacman vPacman) {
+    public CustomTableCellRenderer(PacmanView pacmanView) {
         // Load images
         wallImage = new ImageIcon("src/Images/wall-40.png");
         playerImage = new ImageIcon("src/Images/player-40.png");
@@ -21,7 +20,7 @@ public class PacmanTableCellRenderer extends DefaultTableCellRenderer {
         powerupImage = new ImageIcon("src/Images/powerup-40.png");
         foodImage = new ImageIcon("src/Images/food-40.png");
 
-        this.vPacman = vPacman;
+        this.pacmanView = pacmanView;
     }
 
     @Override
@@ -36,7 +35,7 @@ public class PacmanTableCellRenderer extends DefaultTableCellRenderer {
             setIcon(wallImage);
         }
         else if (value == CellContent.PLAYER){
-            setIcon(vPacman);
+            setIcon(pacmanView);
         }
         else if (value == CellContent.POWER_UP){
             setIcon(powerupImage);

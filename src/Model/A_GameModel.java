@@ -14,9 +14,9 @@ public class A_GameModel {
 
     // Add methods to manage game objects (player, enemies, power-ups, etc.)
 
-    public JTable getGameBoard() {
-        return gameBoard.getTable();
+    public GameBoard getGameBoard() {
+        return gameBoard;
     }
-    
+
     // GameBoard class remains the same as before, but make it a static inner class
 }

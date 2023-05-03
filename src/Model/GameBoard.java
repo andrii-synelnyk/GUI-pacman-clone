@@ -10,6 +10,8 @@ public class GameBoard extends AbstractTableModel {
     private Cell[][] board;
     private JTable table;
 
+    private Cell pacmanCell;
+
     // Inner class representing a cell in the game board
     public class Cell {
         private int row;
@@ -31,6 +33,13 @@ public class GameBoard extends AbstractTableModel {
         }
 
         // Getters and setters for row, column, and content
+        public int getRow(){
+            return row;
+        }
+
+        public int getColumn(){
+            return column;
+        }
     }
 
     public GameBoard(int rows, int columns) {
@@ -39,10 +48,13 @@ public class GameBoard extends AbstractTableModel {
         this.board = new Cell[rows][columns];
         this.table = new JTable(this);
 
+        table.setFocusable(false);
+
         initBoard();
     }
 
     private void initBoard() {
+        // Spawn food everywhere (later will be replaced by walls or other objects if necessary)
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < columns; col++) {
                 board[row][col] = new Cell(row, col, CellContent.FOOD);
@@ -68,12 +80,26 @@ public class GameBoard extends AbstractTableModel {
 
         // Place the player
         board[1][1] = new Cell(1, 1, CellContent.PLAYER);
+        pacmanCell = board[1][1];
 
         // Place enemies (use a loop to place multiple enemies)
         board[rows - 2][columns - 2] = new Cell(rows - 2, columns - 2, CellContent.ENEMY);
 
         // Place power-ups (use a loop to place multiple power-ups)
         board[1][columns - 2] = new Cell(1, columns - 2, CellContent.POWER_UP);
+    }
+
+    public void setPacmanCell(int row, int column){
+        board[row][column].setContent(CellContent.PLAYER);
+        pacmanCell = board[row][column];
+    }
+
+    public Cell getPacmanCell(){
+        return pacmanCell;
+    }
+
+    public Cell getCell(int row, int column){
+        return board[row][column];
     }
 
     @Override
