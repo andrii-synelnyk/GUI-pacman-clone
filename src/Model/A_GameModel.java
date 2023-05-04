@@ -11,11 +11,14 @@ public class A_GameModel {
     private GameBoard gameBoard;
 
     private int score;
+    private Pacman pacman;
 
     public A_GameModel(int rows, int columns) {
         this.gameBoard = new GameBoard(rows, columns, this);
         System.out.println("Created gameboard");
         this.score = 0;
+
+        pacman = gameBoard.getPacman();
     }
 
     // Add methods to manage game objects (player, enemies, power-ups, etc.)
@@ -28,7 +31,6 @@ public class A_GameModel {
         new Thread(() -> {
             while (characterWhoCalled.getIsRunning()) {
                 try {
-                    Thread.sleep(characterWhoCalled.timeInterval);
                     if (characterWhoCalled.direction != null) {
                         Point newPosition = getNewPosition(characterWhoCalled);
                         int newRow = newPosition.x;
@@ -40,6 +42,10 @@ public class A_GameModel {
                             characterWhoCalled.changeDirection(); // then change direction
                         }
                     }
+
+                    checkForGameOver(); // Check for game over after updating the character position
+
+                    Thread.sleep(characterWhoCalled.timeInterval); // Sleep after checking for game over
                 } catch (InterruptedException e) {
                     characterWhoCalled.setIsRunning(false);
                 }
@@ -63,12 +69,13 @@ public class A_GameModel {
 
     private void updateCharacterPosition(Character characterWhoCalled, int newRow, int newCol) {
         Object saveCellContent = gameBoard.getCharacterCell(characterWhoCalled).getContentUnderneath();
+        Object newCellContent = gameBoard.getCell(newRow, newCol).getContent();
 
         if (characterWhoCalled.getType() == CellContent.PLAYER) {
             gameBoard.getCharacterCell(characterWhoCalled).setEaten(); // remove sprite of object Pacman moved through
-            if (gameBoard.getCell(newRow, newCol).getContent() == CellContent.FOOD) { // If the cell pacman moved to is food, then increase score
+            if (newCellContent == CellContent.FOOD) { // If the cell pacman moved to is food, then increase score
                 increaseScoreBy(1);
-            }else if (gameBoard.getCell(newRow, newCol).getContent() == CellContent.POWER_UP){ // Give Pacman higher speed for 5 sec
+            }else if (newCellContent == CellContent.POWER_UP){ // Give Pacman higher speed for 5 sec
                 new Thread(() -> {
                     characterWhoCalled.timeInterval = 150;
                     try {
@@ -88,5 +95,25 @@ public class A_GameModel {
 
     public void increaseScoreBy(int increaseFactor){
         score += increaseFactor;
+    }
+
+    public void checkForGameOver() {
+        GameBoard.Cell pacmanCell = gameBoard.getCharacterCell(pacman);
+        boolean collisionDetected = false;
+
+        for (Enemy enemy : gameBoard.getEnemies()) {
+            GameBoard.Cell enemyCell = gameBoard.getCharacterCell(enemy);
+            if (pacmanCell == enemyCell) {
+                collisionDetected = true;
+                break;
+            }
+        }
+
+        if (collisionDetected) { // CALL SEPARATE GAME OVER FUNCTION WHICH HANDLES ALL GAME OVER LOGIC (PROBABLY IN CONTROLLER)
+            pacman.setIsRunning(false);
+            for (Enemy enemy : gameBoard.getEnemies()) {
+                enemy.setIsRunning(false);
+            }
+        }
     }
 }

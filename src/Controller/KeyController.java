@@ -17,7 +17,6 @@ public class KeyController implements KeyListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
-        System.out.println("pressed");
         switch (e.getKeyChar()) {
             case 'w':
                 gameController.movePacman(Direction.UP);

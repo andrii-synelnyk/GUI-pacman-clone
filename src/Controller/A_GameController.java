@@ -1,6 +1,7 @@
 package Controller;
 
 import Model.A_GameModel;
+import Model.Character;
 import Model.Pacman;
 import View.A_GameView;
 import View.PacmanView;
@@ -39,6 +40,8 @@ public class A_GameController {
 
         KeyController keyController = new KeyController(this);
         gameView.getGameWindow().addKeyListener(keyController);
+
+        gameModel.getGameBoard().getCharacters().forEach(Character::moveCharacter);
     }
 
     public void notifyViewToRedrawBoard(){

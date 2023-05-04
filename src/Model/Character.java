@@ -18,9 +18,10 @@ public abstract class Character {
 
         gameModel = gameBoard.getGameModel();
         this.timeInterval = 300;
+    }
+    public void moveCharacter(){
         gameModel.moveCharacter(this); // Start checking for change in direction
     }
-
     public abstract CellContent getType();
 
     public Direction getDirection(){

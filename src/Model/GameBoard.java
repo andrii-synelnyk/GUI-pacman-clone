@@ -4,10 +4,7 @@ import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import Enum.CellContent;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class GameBoard extends AbstractTableModel {
@@ -16,7 +13,7 @@ public class GameBoard extends AbstractTableModel {
     private Cell[][] board;
     private JTable table;
 
-    private Map<Character, Cell> characterCells;
+    private HashMap<Character, Cell> characterCells;
 
     private A_GameModel gameModel;
 
@@ -24,6 +21,8 @@ public class GameBoard extends AbstractTableModel {
 
     private Enemy enemy;
 
+    private HashSet<Enemy> enemies;
+    private HashSet<Character> characters;
     // Inner class representing a cell in the game board
     public class Cell {
         private int row;
@@ -74,6 +73,8 @@ public class GameBoard extends AbstractTableModel {
         this.gameModel = gameModel;
 
         characterCells = new HashMap<>();
+        enemies = new HashSet<>();
+        characters = new HashSet<>();
 
         table.setFocusable(false);
 
@@ -108,13 +109,16 @@ public class GameBoard extends AbstractTableModel {
         // Place the player
         pacman = new Pacman(this);
         setCharacterCell(pacman, 1, 1, pacman.getType());
+        characters.add(pacman);
 
         // Place enemies (use a loop to place multiple enemies)
-        int numberOfEnemies = 5; // Set the desired number of enemies
+        int numberOfEnemies = 1; // Set the desired number of enemies
         for (int i = 0; i < numberOfEnemies; i++) {
             enemy = new Enemy(this);
             Cell emptyCell = getRandomEmptyCell();
             setCharacterCell(enemy, emptyCell.getRow(), emptyCell.getColumn(), enemy.getType());
+            enemies.add(enemy);
+            characters.add(enemy);
         }
 
 
@@ -160,6 +164,14 @@ public class GameBoard extends AbstractTableModel {
         } else {
             throw new IllegalStateException("No empty cells available to place an enemy.");
         }
+    }
+
+    public HashSet<Enemy> getEnemies(){
+        return enemies;
+    }
+
+    public HashSet<Character> getCharacters(){
+        return characters;
     }
 
     @Override
