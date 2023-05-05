@@ -17,7 +17,6 @@ public class A_GameController {
     private final A_GameView gameView;
 
     Pacman pacman;
-    PacmanView pacmanView;
 
     public A_GameController(A_GameModel gameModel, A_GameView gameView) {
         this.gameModel = gameModel;
@@ -29,12 +28,9 @@ public class A_GameController {
     }
 
     public void startGame(){
-
-        pacmanView = new PacmanView(40, 40, pacman);
-
         // Create game board
-        JTable newGameBoard = gameModel.getGameBoard().getTable();
-        gameView.showGameWindow(newGameBoard, pacmanView);
+        JTable gameBoard = gameModel.getGameBoard().getTable();
+        gameView.showGameWindow(gameBoard, this);
 
         notifyViewToRedrawBoard();
 
@@ -71,6 +67,10 @@ public class A_GameController {
         pacman.setDirection(direction);
         // Notify the View to update the display after moving the Pacman
         gameView.redrawGameBoard();
+    }
+
+    public Pacman getPacman(){
+        return pacman;
     }
     // Add methods to manage game state and handle events like collisions or power-up activations
 }

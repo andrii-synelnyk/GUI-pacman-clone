@@ -12,15 +12,21 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
 
     private PacmanView pacmanView;
 
-    public CustomTableCellRenderer(PacmanView pacmanView) {
-        // Load images
-        wallImage = new ImageIcon("src/Images/wall-40.png");
-        playerImage = new ImageIcon("src/Images/player-40.png");
-        enemyImage = new ImageIcon("src/Images/enemy-40.png");
-        powerupImage = new ImageIcon("src/Images/powerup-40.png");
-        foodImage = new ImageIcon("src/Images/food-40.png");
+    public CustomTableCellRenderer(PacmanView pacmanView, int imageSize) {
+        // Load and resize images
+        wallImage = resizeImageIcon(new ImageIcon("src/Images/wall-40.png"), imageSize, imageSize);
+        playerImage = resizeImageIcon(new ImageIcon("src/Images/player-40.png"), imageSize, imageSize);
+        enemyImage = resizeImageIcon(new ImageIcon("src/Images/enemy-40.png"), imageSize, imageSize);
+        powerupImage = resizeImageIcon(new ImageIcon("src/Images/powerup-40.png"), imageSize, imageSize);
+        foodImage = resizeImageIcon(new ImageIcon("src/Images/food-40.png"), imageSize, imageSize);
 
         this.pacmanView = pacmanView;
+    }
+
+    private ImageIcon resizeImageIcon(ImageIcon originalImageIcon, int newWidth, int newHeight) {
+        Image originalImage = originalImageIcon.getImage();
+        Image resizedImage = originalImage.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+        return new ImageIcon(resizedImage);
     }
 
     @Override

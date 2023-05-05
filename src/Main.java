@@ -12,7 +12,7 @@ public class Main {
 
         // Create the game model, view, and controller
         A_GameModel gameModel = new A_GameModel(rows, columns);
-        A_GameView gameView = new A_GameView();
+        A_GameView gameView = new A_GameView(gameModel);
         A_GameController gameController = new A_GameController(gameModel, gameView);
 
     }

@@ -1,13 +1,16 @@
 package View;
 
+import Controller.A_GameController;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class GameWindow extends JFrame {
     private JTable gameTable;
-    private int imageSize = 40;
 
-    public GameWindow(JTable gameBoard, PacmanView pacmanView) {
+    PacmanView pacmanView;
+
+    public GameWindow(JTable gameBoard, int imageSize, A_GameController gameController) {
         setTitle("Pacman Game");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
@@ -16,6 +19,8 @@ public class GameWindow extends JFrame {
         gameTable.setRowHeight(imageSize); // Set the desired row height
         for (int i = 0; i < gameTable.getColumnCount(); i++){
             gameTable.getColumnModel().getColumn(i).setPreferredWidth(imageSize);
+            gameTable.getColumnModel().getColumn(i).setMinWidth(imageSize);
+            gameTable.getColumnModel().getColumn(i).setMaxWidth(imageSize);
         }
         gameTable.setShowGrid(false); // Remove grid lines
         gameTable.setTableHeader(null); // Remove column header
@@ -24,16 +29,19 @@ public class GameWindow extends JFrame {
         gameTable.setBackground(Color.BLACK);
         gameTable.setCellSelectionEnabled(false); // Disable ability to select cells
 
-        // Set up a JScrollPane to handle larger boards
-        JScrollPane scrollPane = new JScrollPane(gameTable);
-        Dimension originalDimension = gameTable.getPreferredSize();
-        Dimension newDimension = new Dimension(originalDimension.width + 4, originalDimension.height + 4); // not to get scrollbars with default size
-        scrollPane.setPreferredSize(newDimension);
-        getContentPane().add(scrollPane);
-        scrollPane.setFocusable(false); // MAYBE REMOVE
+        // Set the preferred size of the gameTable directly
+        Dimension tableSize = new Dimension(
+                gameTable.getColumnCount() * imageSize,
+                gameTable.getRowCount() * imageSize);
+        gameTable.setSize(tableSize);
+
+        // Add the gameTable to the content pane without wrapping it in a JScrollPane
+        getContentPane().add(gameTable);
+        gameTable.setFocusable(false); // MAYBE REMOVE
 
         // Set up the custom cell renderer
-        CustomTableCellRenderer cellRenderer = new CustomTableCellRenderer(pacmanView);
+        pacmanView = new PacmanView(imageSize, imageSize, gameController.getPacman());
+        CustomTableCellRenderer cellRenderer = new CustomTableCellRenderer(pacmanView, imageSize);
         gameTable.setDefaultRenderer(Object.class, cellRenderer);
 
         pack();
