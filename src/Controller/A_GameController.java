@@ -2,6 +2,7 @@ package Controller;
 
 import Model.A_GameModel;
 import Model.Character;
+import Model.Enemy;
 import Model.Pacman;
 import View.A_GameView;
 import View.PacmanView;
@@ -71,6 +72,12 @@ public class A_GameController {
 
     public Pacman getPacman(){
         return pacman;
+    }
+
+    public Enemy getEnemy(){
+        if (gameModel.getGameBoard().getEnemies().size() != 0)
+            return gameModel.getGameBoard().getEnemies().get(0);
+        else return null;
     }
     // Add methods to manage game state and handle events like collisions or power-up activations
 }

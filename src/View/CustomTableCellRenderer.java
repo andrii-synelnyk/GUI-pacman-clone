@@ -11,8 +11,9 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
     private ImageIcon wallImage, playerImage, enemyImage, powerupImage, foodImage;
 
     private PacmanView pacmanView;
+    private EnemyView enemyView;
 
-    public CustomTableCellRenderer(PacmanView pacmanView, int imageSize) {
+    public CustomTableCellRenderer(PacmanView pacmanView, EnemyView enemyView, int imageSize) {
         // Load and resize images
         wallImage = resizeImageIcon(new ImageIcon("src/Images/wall-40.png"), imageSize, imageSize);
         playerImage = resizeImageIcon(new ImageIcon("src/Images/player-40.png"), imageSize, imageSize);
@@ -21,11 +22,12 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
         foodImage = resizeImageIcon(new ImageIcon("src/Images/food-40.png"), imageSize, imageSize);
 
         this.pacmanView = pacmanView;
+        this.enemyView = enemyView;
     }
 
     private ImageIcon resizeImageIcon(ImageIcon originalImageIcon, int newWidth, int newHeight) {
         Image originalImage = originalImageIcon.getImage();
-        Image resizedImage = originalImage.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+        Image resizedImage = originalImage.getScaledInstance(newWidth, newHeight, Image.SCALE_DEFAULT);
         return new ImageIcon(resizedImage);
     }
 
@@ -47,7 +49,7 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
             setIcon(powerupImage);
         }
         else if (value == CellContent.ENEMY){
-            setIcon(enemyImage);
+            setIcon(enemyView);
         }
         else if (value == CellContent.FOOD){
             setIcon(foodImage);

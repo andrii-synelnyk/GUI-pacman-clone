@@ -9,6 +9,7 @@ public class GameWindow extends JFrame {
     private JTable gameTable;
 
     PacmanView pacmanView;
+    EnemyView enemyView;
 
     public GameWindow(JTable gameBoard, int imageSize, A_GameController gameController) {
         setTitle("Pacman Game");
@@ -41,7 +42,8 @@ public class GameWindow extends JFrame {
 
         // Set up the custom cell renderer
         pacmanView = new PacmanView(imageSize, imageSize, gameController.getPacman());
-        CustomTableCellRenderer cellRenderer = new CustomTableCellRenderer(pacmanView, imageSize);
+        if (gameController.getEnemy() != null) enemyView = new EnemyView(imageSize, imageSize, gameController.getEnemy());
+        CustomTableCellRenderer cellRenderer = new CustomTableCellRenderer(pacmanView, enemyView, imageSize);
         gameTable.setDefaultRenderer(Object.class, cellRenderer);
 
         pack();

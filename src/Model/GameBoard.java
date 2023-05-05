@@ -21,7 +21,7 @@ public class GameBoard extends AbstractTableModel {
 
     private Enemy enemy;
 
-    private HashSet<Enemy> enemies;
+    private ArrayList<Enemy> enemies;
     private HashSet<Character> characters;
     // Inner class representing a cell in the game board
     public class Cell {
@@ -73,7 +73,7 @@ public class GameBoard extends AbstractTableModel {
         this.gameModel = gameModel;
 
         characterCells = new HashMap<>();
-        enemies = new HashSet<>();
+        enemies = new ArrayList<>();
         characters = new HashSet<>();
 
         table.setFocusable(false);
@@ -112,7 +112,7 @@ public class GameBoard extends AbstractTableModel {
         characters.add(pacman);
 
         // Place enemies (use a loop to place multiple enemies)
-        int numberOfEnemies = 1; // Set the desired number of enemies
+        int numberOfEnemies = 5; // Set the desired number of enemies
         for (int i = 0; i < numberOfEnemies; i++) {
             enemy = new Enemy(this);
             Cell emptyCell = getRandomEmptyCell();
@@ -166,7 +166,7 @@ public class GameBoard extends AbstractTableModel {
         }
     }
 
-    public HashSet<Enemy> getEnemies(){
+    public ArrayList<Enemy> getEnemies(){
         return enemies;
     }
 
