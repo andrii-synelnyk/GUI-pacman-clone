@@ -32,9 +32,8 @@ public class A_GameView {
         return gameViewHeight / rows;
     }
 
-    public void redrawGameBoard(Direction pacmanDirection){
-        pacmanView.setPacmanDirection(pacmanDirection);
-        gameWindow.redrawBoard();
+    public void setPacmanViewDirection(Direction direction){
+        pacmanView.setPacmanDirection(direction);
     }
 
     public GameWindow getGameWindow() {

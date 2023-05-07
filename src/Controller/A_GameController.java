@@ -29,17 +29,41 @@ public class A_GameController {
         gameView.showGameWindow(gameBoard);
 
         // Start redrawing game board
-        notifyViewToRedrawBoard();
+        redrawGameWindow();
         checkForGameOver();
+        changePacmanDirection();
 
         // Start listening to user input
         KeyController keyController = new KeyController(this);
         gameView.getGameWindow().addKeyListener(keyController);
     }
 
-    public void notifyViewToRedrawBoard(){
+    public void redrawGameWindow(){
         Thread redrawThread = new Thread(() -> {
-            while (!gameModel.getGameOver()) { // CHANGE !!!
+            while (!gameModel.getGameOver()) {
+                try {
+                    Thread.sleep(15);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                int score = gameModel.getScore();
+                int time = gameModel.getTime();
+
+                SwingUtilities.invokeLater(() -> {
+                    gameView.getGameWindow().updateTime(time);
+                    gameView.getGameWindow().updateScore(score);
+                    gameView.getGameWindow().redrawBoard();
+                });
+            }
+        });
+        redrawThread.start();
+        controllerThreads.add(redrawThread);
+    }
+
+    public void changePacmanDirection(){
+        Thread changePacmanDirectionThread = new Thread(() -> {
+            while (!gameModel.getGameOver()) {
                 try {
                     Thread.sleep(15);
                 } catch (InterruptedException e) {
@@ -47,11 +71,11 @@ public class A_GameController {
                 }
 
                 Direction pacmanDirection = gameModel.getPacmanDirection();
-                gameView.redrawGameBoard(pacmanDirection); // Pass score and time to this method form Model too
+                gameView.setPacmanViewDirection(pacmanDirection);
             }
         });
-        redrawThread.start();
-        controllerThreads.add(redrawThread);
+        changePacmanDirectionThread.start();
+        controllerThreads.add(changePacmanDirectionThread);
     }
 
     public void checkForGameOver(){

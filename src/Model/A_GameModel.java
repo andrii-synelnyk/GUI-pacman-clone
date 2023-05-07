@@ -26,6 +26,8 @@ public class A_GameModel {
 
     private HashSet<Thread> modelThreads = new HashSet<>();
 
+    private int time;
+
     public A_GameModel(int rows, int columns) {
         this.score = 0;
         enemies = new ArrayList<>();
@@ -55,6 +57,8 @@ public class A_GameModel {
 
         // Start moving characters
         characters.forEach(character -> {moveCharacter(character);});
+
+        startTimer();
     }
 
     // Add methods to manage game objects (player, enemies, power-ups, etc.)
@@ -130,6 +134,29 @@ public class A_GameModel {
         score += increaseFactor;
     }
 
+    public int getScore(){
+        return score;
+    }
+
+    public void startTimer(){
+        Thread timerThread = new Thread(() -> {
+            while (!gameOver) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                time++;
+            }
+        });
+        timerThread.start();
+        modelThreads.add(timerThread);
+    }
+
+    public int getTime(){
+        return time;
+    }
+
     public void checkForGameOver() {
         GameBoard.Cell pacmanCell = gameBoard.getCharacterCell(pacman);
         boolean collisionDetected = false;
@@ -160,7 +187,6 @@ public class A_GameModel {
     }
 
     public ArrayList<Enemy> getEnemies(){ return enemies; }
-    public HashSet<Character> getCharacters(){ return characters; }
 
     public void useSpeedPowerUp(){
         Thread powerUpThread = new Thread(() -> {
@@ -168,7 +194,7 @@ public class A_GameModel {
             try {
                 Thread.sleep(7000);
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
             pacman.timeInterval = 300;
         });
