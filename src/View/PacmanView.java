@@ -15,8 +15,8 @@ public class PacmanView extends CharacterView {
     Direction pacmanDirection = Direction.UP;
 
 
-    public PacmanView(int width, int height) {
-        super(width, height);
+    public PacmanView(int size) {
+        super(size);
     }
 
     public void paintIcon(Component c, Graphics g, int x, int y) {

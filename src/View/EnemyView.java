@@ -11,8 +11,8 @@ public class EnemyView extends CharacterView {
 
     private int animationFrame = 1;
 
-    public EnemyView(int width, int height) {
-        super(width, height);
+    public EnemyView(int size) {
+        super(size);
 
         this.enemyColor = Color.red;
 

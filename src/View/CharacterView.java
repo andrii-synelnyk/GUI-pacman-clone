@@ -8,9 +8,9 @@ public class CharacterView implements Icon {
     protected int width;
     protected int height;
 
-    public CharacterView(int width, int height){
-        this.width = width;
-        this.height = height;
+    public CharacterView(int size){
+        this.width = size;
+        this.height = size;
     }
 
     public void paintIcon(Component c, Graphics g, int x, int y) {}
