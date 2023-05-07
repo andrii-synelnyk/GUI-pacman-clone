@@ -108,7 +108,7 @@ public class GameBoard extends AbstractTableModel {
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < columns; col++) {
                 if (board[row][col].getContent() == CellContent.EMPTY) {
-                    board[row][col].setContent(CellContent.FOOD);
+                    board[row][col] = new Cell(row, col, CellContent.FOOD);
                     foods.add(board[row][col]);
                 }
             }
