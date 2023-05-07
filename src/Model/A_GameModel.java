@@ -49,7 +49,7 @@ public class A_GameModel {
         }
 
         // Start moving characters
-        characters.forEach(Character::moveCharacter);
+        characters.forEach(character -> {moveCharacter(character);});
     }
 
     // Add methods to manage game objects (player, enemies, power-ups, etc.)

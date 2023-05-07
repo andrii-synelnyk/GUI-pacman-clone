@@ -9,19 +9,15 @@ public abstract class Character {
 
     protected GameBoard gameBoard;
 
-    protected A_GameModel gameModel;
     protected int timeInterval;
 
     public Character(GameBoard gameBoard) {
         this.gameBoard = gameBoard;
-        direction = Direction.LEFT; // RANDOMISE IF NOT PACMAN
+        direction = Direction.RIGHT; // RANDOMISE IF NOT PACMAN
 
-        gameModel = gameBoard.getGameModel();
         this.timeInterval = 300;
     }
-    public void moveCharacter(){
-        gameModel.moveCharacter(this); // Start checking for change in direction
-    }
+
     public abstract CellContent getType();
 
     public Direction getDirection(){
@@ -34,11 +30,7 @@ public abstract class Character {
 
     public void changeDirection(){}
 
-    public boolean getIsRunning(){
-        return isRunning;
-    }
-
     public void setIsRunning(Boolean isRunning){
         this.isRunning = isRunning;
-    }
+    } // CAN REMOVE IF ENEMY CLASS EXITS INNER THREAD BY CHECKING GAME OVER FROM GAME MODEL
 }
