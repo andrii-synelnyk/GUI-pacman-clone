@@ -42,7 +42,7 @@ public class A_GameModel {
         int numberOfEnemies = 5; // Set the desired number of enemies
         for (int i = 0; i < numberOfEnemies; i++) {
             enemy = new Enemy(gameBoard);
-            GameBoard.Cell emptyCell = gameBoard.getRandomEmptyCell();
+            GameBoard.Cell emptyCell = gameBoard.getRandomAvailableCell();
             gameBoard.setCharacterCell(enemy, emptyCell.getRow(), emptyCell.getColumn(), enemy.getType());
             enemies.add(enemy);
             characters.add(enemy);

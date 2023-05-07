@@ -17,6 +17,8 @@ public class GameBoard extends AbstractTableModel {
 
     private A_GameModel gameModel; // REMOVE
 
+    // DEBUG
+    public HashSet<Cell> foods = new HashSet<>();
 
     // Inner class representing a cell in the game board
     public class Cell {
@@ -75,10 +77,10 @@ public class GameBoard extends AbstractTableModel {
     }
 
     private void initBoard() {
-        // Spawn food everywhere (later will be replaced by walls or other objects if necessary)
+        // Fill the board with empty cells
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < columns; col++) {
-                board[row][col] = new Cell(row, col, CellContent.FOOD);
+                board[row][col] = new Cell(row, col, CellContent.EMPTY);
             }
         }
 
@@ -101,6 +103,18 @@ public class GameBoard extends AbstractTableModel {
 
         // Place power-ups (use a loop to place multiple power-ups)
         board[rows - 2][columns - 5] = new Cell(rows - 2, columns - 5, CellContent.POWER_UP);
+
+        // Place food on empty cells
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < columns; col++) {
+                if (board[row][col].getContent() == CellContent.EMPTY) {
+                    board[row][col].setContent(CellContent.FOOD);
+                    foods.add(board[row][col]);
+                }
+            }
+        }
+
+        System.out.println(foods.size());
     }
 
     public void setCharacterCell(Character character, int row, int column, CellContent content) {
@@ -120,7 +134,7 @@ public class GameBoard extends AbstractTableModel {
         return gameModel;
     }
 
-    public Cell getRandomEmptyCell() {
+    public Cell getRandomAvailableCell() {
         List<Cell> emptyCells = new ArrayList<>();
 
         for (int row = 0; row < rows; row++) {
