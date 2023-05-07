@@ -4,21 +4,52 @@ package Model;
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashSet;
 
-import Enum.CellContent;
+import Enum.*;
 
 public class A_GameModel {
     private GameBoard gameBoard;
 
     private int score;
+
+    private boolean gameOver = false;
+
     private Pacman pacman;
 
-    public A_GameModel(int rows, int columns) {
-        this.gameBoard = new GameBoard(rows, columns, this);
-        System.out.println("Created gameboard");
-        this.score = 0;
+    private Enemy enemy;
 
-        pacman = gameBoard.getPacman();
+    private ArrayList<Enemy> enemies;
+    private HashSet<Character> characters;
+
+    private HashSet<Thread> modelThreads = new HashSet<>();
+
+    public A_GameModel(int rows, int columns) {
+        this.score = 0;
+        enemies = new ArrayList<>();
+        characters = new HashSet<>();
+
+        // Create the game board
+        this.gameBoard = new GameBoard(rows, columns, this);
+
+        // Create and place player on the board
+        pacman = new Pacman(gameBoard);
+        gameBoard.setCharacterCell(pacman, 1, 1, pacman.getType());
+        characters.add(pacman);
+
+        // Create and place enemies on the board
+        int numberOfEnemies = 5; // Set the desired number of enemies
+        for (int i = 0; i < numberOfEnemies; i++) {
+            enemy = new Enemy(gameBoard);
+            GameBoard.Cell emptyCell = gameBoard.getRandomEmptyCell();
+            gameBoard.setCharacterCell(enemy, emptyCell.getRow(), emptyCell.getColumn(), enemy.getType());
+            enemies.add(enemy);
+            characters.add(enemy);
+        }
+
+        // Start moving characters
+        characters.forEach(Character::moveCharacter);
     }
 
     // Add methods to manage game objects (player, enemies, power-ups, etc.)
@@ -28,29 +59,32 @@ public class A_GameModel {
     }
 
     public void moveCharacter(Character characterWhoCalled) {
-        new Thread(() -> {
-            while (characterWhoCalled.getIsRunning()) {
-                try {
-                    if (characterWhoCalled.direction != null) {
-                        Point newPosition = getNewPosition(characterWhoCalled);
-                        int newRow = newPosition.x;
-                        int newCol = newPosition.y;
+        Thread moveCharacterThread = new Thread(() -> {
+            while (!gameOver) {
 
-                        if (gameBoard.getCell(newRow, newCol).getContent() != CellContent.WALL) {
-                            updateCharacterPosition(characterWhoCalled, newRow, newCol);
-                        } else if (characterWhoCalled.getType() == CellContent.ENEMY) { // if character is enemy and the next cell is WALL
-                            characterWhoCalled.changeDirection(); // then change direction
-                        }
+                if (characterWhoCalled.direction != null) {
+                    Point newPosition = getNewPosition(characterWhoCalled);
+                    int newRow = newPosition.x;
+                    int newCol = newPosition.y;
+
+                    if (gameBoard.getCell(newRow, newCol).getContent() != CellContent.WALL) {
+                        updateCharacterPosition(characterWhoCalled, newRow, newCol);
+                    } else if (characterWhoCalled.getType() == CellContent.ENEMY) { // if character is enemy and the next cell is WALL
+                        characterWhoCalled.changeDirection(); // then change direction
                     }
+                }
 
-                    checkForGameOver(); // Check for game over after updating the character position
+                checkForGameOver(); // Check for game over after updating the character position
 
-                    Thread.sleep(characterWhoCalled.timeInterval); // Sleep after checking for game over
+                try {
+                    Thread.sleep(characterWhoCalled.timeInterval); // Wait till the next move
                 } catch (InterruptedException e) {
-                    characterWhoCalled.setIsRunning(false);
+                    e.printStackTrace();
                 }
             }
-        }).start();
+        });
+        moveCharacterThread.start();
+        modelThreads.add(moveCharacterThread);
     }
 
     private Point getNewPosition(Character characterWhoCalled) {
@@ -71,26 +105,20 @@ public class A_GameModel {
         Object saveCellContent = gameBoard.getCharacterCell(characterWhoCalled).getContentUnderneath();
         Object newCellContent = gameBoard.getCell(newRow, newCol).getContent();
 
+        // Check for all types of collisions
         if (characterWhoCalled.getType() == CellContent.PLAYER) {
             gameBoard.getCharacterCell(characterWhoCalled).setEaten(); // remove sprite of object Pacman moved through
             if (newCellContent == CellContent.FOOD) { // If the cell pacman moved to is food, then increase score
                 increaseScoreBy(1);
-            }else if (newCellContent == CellContent.POWER_UP){ // Give Pacman higher speed for 5 sec
-                new Thread(() -> {
-                    characterWhoCalled.timeInterval = 150;
-                    try {
-                        Thread.sleep(7000);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                    characterWhoCalled.timeInterval = 300;
-                }).start();
+            }else if (newCellContent == CellContent.POWER_UP){ // Give Pacman higher speed for 7 sec
+                // Power up thread
+                useSpeedPowerUp();
             }
         } else {
             gameBoard.getCharacterCell(characterWhoCalled).setContent(saveCellContent);
         }
 
-        gameBoard.setCharacterCell(characterWhoCalled, newRow, newCol, characterWhoCalled.getType()); // Move character sprite to next cell
+        gameBoard.setCharacterCell(characterWhoCalled, newRow, newCol, characterWhoCalled.getType()); // Move character to next cell
     }
 
     public void increaseScoreBy(int increaseFactor){
@@ -101,7 +129,7 @@ public class A_GameModel {
         GameBoard.Cell pacmanCell = gameBoard.getCharacterCell(pacman);
         boolean collisionDetected = false;
 
-        for (Enemy enemy : gameBoard.getEnemies()) {
+        for (Enemy enemy : getEnemies()) {
             GameBoard.Cell enemyCell = gameBoard.getCharacterCell(enemy);
             if (pacmanCell == enemyCell) {
                 collisionDetected = true;
@@ -109,10 +137,57 @@ public class A_GameModel {
             }
         }
 
-        if (collisionDetected) { // CALL SEPARATE GAME OVER FUNCTION WHICH HANDLES ALL GAME OVER LOGIC (PROBABLY IN CONTROLLER)
-            pacman.setIsRunning(false);
-            for (Enemy enemy : gameBoard.getEnemies()) {
-                enemy.setIsRunning(false);
+        if (collisionDetected) {
+            gameOver = true; // Controller constantly monitors this flag
+        }
+    }
+
+    public Direction getPacmanDirection(){
+        return pacman.getDirection();
+    }
+
+    public boolean getGameOver(){
+        return gameOver;
+    }
+
+    public Pacman getPacman(){
+        return pacman;
+    }
+
+    public ArrayList<Enemy> getEnemies(){ return enemies; }
+    public HashSet<Character> getCharacters(){ return characters; }
+
+    public void useSpeedPowerUp(){
+        Thread powerUpThread = new Thread(() -> {
+            pacman.timeInterval = 150;
+            try {
+                Thread.sleep(7000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            pacman.timeInterval = 300;
+        });
+        powerUpThread.start();
+        modelThreads.add(powerUpThread);
+    }
+
+    public void stop(){
+        // Join threads in Model class (moving characters, power-ups activations)
+        for (Thread t : modelThreads){
+            try{
+                t.join();
+            }catch (InterruptedException e){
+                e.printStackTrace();
+            }
+        }
+
+        // Join threads in Enemy class (choosing new direction)
+        for (Enemy enemy : enemies) {
+            enemy.setIsRunning(false);
+            try {
+                enemy.getChangeDirectionThread().join();
+            }catch (Exception e){
+                e.printStackTrace();
             }
         }
     }

@@ -18,28 +18,16 @@ public class KeyController implements KeyListener {
     @Override
     public void keyTyped(KeyEvent e) {
         switch (e.getKeyChar()) {
-            case 'w':
-                gameController.movePacman(Direction.UP);
-                break;
-            case 's':
-                gameController.movePacman(Direction.DOWN);
-                break;
-            case 'd':
-                gameController.movePacman(Direction.RIGHT);
-                break;
-            case 'a':
-                gameController.movePacman(Direction.LEFT);
-                break;
+            case 'w' -> gameController.movePacman(Direction.UP);
+            case 's' -> gameController.movePacman(Direction.DOWN);
+            case 'd' -> gameController.movePacman(Direction.RIGHT);
+            case 'a' -> gameController.movePacman(Direction.LEFT);
         }
     }
 
     @Override
-    public void keyPressed(KeyEvent e) {
-
-    }
+    public void keyPressed(KeyEvent e) {}
 
     @Override
-    public void keyReleased(KeyEvent e) {
-
-    }
+    public void keyReleased(KeyEvent e) {}
 }

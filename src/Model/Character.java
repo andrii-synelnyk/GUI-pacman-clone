@@ -4,7 +4,7 @@ import Enum.CellContent;
 import Enum.Direction;
 
 public abstract class Character {
-    private boolean isRunning = true;
+    protected boolean isRunning = true;
     protected Direction direction;
 
     protected GameBoard gameBoard;

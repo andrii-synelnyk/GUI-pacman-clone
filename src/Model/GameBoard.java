@@ -15,14 +15,9 @@ public class GameBoard extends AbstractTableModel {
 
     private HashMap<Character, Cell> characterCells;
 
-    private A_GameModel gameModel;
+    private A_GameModel gameModel; // REMOVE
 
-    private Pacman pacman;
 
-    private Enemy enemy;
-
-    private ArrayList<Enemy> enemies;
-    private HashSet<Character> characters;
     // Inner class representing a cell in the game board
     public class Cell {
         private int row;
@@ -73,8 +68,6 @@ public class GameBoard extends AbstractTableModel {
         this.gameModel = gameModel;
 
         characterCells = new HashMap<>();
-        enemies = new ArrayList<>();
-        characters = new HashSet<>();
 
         table.setFocusable(false);
 
@@ -106,22 +99,6 @@ public class GameBoard extends AbstractTableModel {
             }
         }
 
-        // Place the player
-        pacman = new Pacman(this);
-        setCharacterCell(pacman, 1, 1, pacman.getType());
-        characters.add(pacman);
-
-        // Place enemies (use a loop to place multiple enemies)
-        int numberOfEnemies = 5; // Set the desired number of enemies
-        for (int i = 0; i < numberOfEnemies; i++) {
-            enemy = new Enemy(this);
-            Cell emptyCell = getRandomEmptyCell();
-            setCharacterCell(enemy, emptyCell.getRow(), emptyCell.getColumn(), enemy.getType());
-            enemies.add(enemy);
-            characters.add(enemy);
-        }
-
-
         // Place power-ups (use a loop to place multiple power-ups)
         board[rows - 2][columns - 5] = new Cell(rows - 2, columns - 5, CellContent.POWER_UP);
     }
@@ -143,11 +120,7 @@ public class GameBoard extends AbstractTableModel {
         return gameModel;
     }
 
-    public Pacman getPacman(){
-        return pacman;
-    }
-
-    private Cell getRandomEmptyCell() {
+    public Cell getRandomEmptyCell() {
         List<Cell> emptyCells = new ArrayList<>();
 
         for (int row = 0; row < rows; row++) {
@@ -164,14 +137,6 @@ public class GameBoard extends AbstractTableModel {
         } else {
             throw new IllegalStateException("No empty cells available to place an enemy.");
         }
-    }
-
-    public ArrayList<Enemy> getEnemies(){
-        return enemies;
-    }
-
-    public HashSet<Character> getCharacters(){
-        return characters;
     }
 
     @Override
@@ -191,8 +156,6 @@ public class GameBoard extends AbstractTableModel {
 
     @Override
     public void setValueAt(Object value, int rowIndex, int columnIndex) {
-        board[rowIndex][columnIndex].setContent(value);
-        fireTableCellUpdated(rowIndex, columnIndex);
     }
 
     @Override

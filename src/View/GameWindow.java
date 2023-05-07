@@ -8,10 +8,7 @@ import java.awt.*;
 public class GameWindow extends JFrame {
     private JTable gameTable;
 
-    PacmanView pacmanView;
-    EnemyView enemyView;
-
-    public GameWindow(JTable gameBoard, int imageSize, A_GameController gameController) {
+    public GameWindow(JTable gameBoard, int imageSize, PacmanView pacmanView, EnemyView enemyView) {
         setTitle("Pacman Game");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
@@ -41,8 +38,6 @@ public class GameWindow extends JFrame {
         gameTable.setFocusable(false); // MAYBE REMOVE
 
         // Set up the custom cell renderer
-        pacmanView = new PacmanView(imageSize, imageSize, gameController.getPacman());
-        if (gameController.getEnemy() != null) enemyView = new EnemyView(imageSize, imageSize, gameController.getEnemy());
         CustomTableCellRenderer cellRenderer = new CustomTableCellRenderer(pacmanView, enemyView, imageSize);
         gameTable.setDefaultRenderer(Object.class, cellRenderer);
 

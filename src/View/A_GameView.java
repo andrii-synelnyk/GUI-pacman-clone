@@ -4,36 +4,60 @@ import Controller.A_GameController;
 import Model.A_GameModel;
 
 import javax.swing.*;
+import Enum.Direction;
+import Model.Enemy;
+
+import java.util.HashSet;
 
 public class A_GameView extends JFrame {
 
     GameWindow gameWindow;
     int imageSize;
 
-    public A_GameView(A_GameModel gameModel) {
-        // Initialize and configure the JTable with the gameModel's GameBoard
-        imageSize = calculateImageSize(gameModel.getGameBoard().getRowCount());
+    private PacmanView pacmanView;
+    private EnemyView enemyView;
+    private int numberOfRows;
 
+    private HashSet<CharacterView> characterViews; // NOW IS NOT IN USE
+
+    public A_GameView() {
+        // Initialize and configure the JTable with the gameModel's GameBoard
+        characterViews = new HashSet<>();
         this.setFocusable(true);
     }
 
-    public void showGameWindow(JTable gameBoard, A_GameController gameController){
-        gameWindow = new GameWindow(gameBoard, imageSize, gameController);
+    public void showGameWindow(JTable gameBoard){
+        imageSize = calculateImageSize(numberOfRows);
+        pacmanView = new PacmanView(imageSize, imageSize);
+        enemyView = new EnemyView(imageSize, imageSize);
+        characterViews.add(pacmanView);
+        characterViews.add(enemyView);
+        gameWindow = new GameWindow(gameBoard, imageSize, pacmanView, enemyView);
     }
 
     private int calculateImageSize(int rows) {
-        // Replace these constants with the desired dimensions of your game view
         final int gameViewHeight = 1000;
-        // Choose the smaller dimension to fit both width and height
         return gameViewHeight / rows;
     }
 
-    public void redrawGameBoard(){
+    public void redrawGameBoard(Direction pacmanDirection){
+        pacmanView.setPacmanDirection(pacmanDirection);
         gameWindow.redrawBoard();
     }
 
     public GameWindow getGameWindow() {
         return gameWindow;
     }
-    // Add methods to update the view based on the GameModel
+
+    public void setNumberOfRows(int numberOfRows){
+        this.numberOfRows = numberOfRows;
+    }
+
+    public HashSet<CharacterView> getCharacterViews() {
+        return characterViews;
+    }
+
+    public PacmanView getPacmanView(){
+        return pacmanView;
+    }
 }

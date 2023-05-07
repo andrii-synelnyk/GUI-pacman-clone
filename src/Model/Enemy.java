@@ -10,13 +10,12 @@ import Model.GameBoard.Cell;
 
 public class Enemy extends Character{
 
-    private boolean isRunning = true;
-
+    Thread changeDirectionThread;
     public Enemy(GameBoard gameBoard) {
 
         super(gameBoard);
 
-        new Thread(() -> {
+        changeDirectionThread = new Thread(() -> {
             while (isRunning) {
                 try {
                     Thread.sleep(1000);
@@ -25,7 +24,8 @@ public class Enemy extends Character{
                     isRunning = false;
                 }
             }
-        }).start();
+        });
+        changeDirectionThread.start();
 
     }
 
@@ -56,5 +56,9 @@ public class Enemy extends Character{
 
     public CellContent getType(){
         return CellContent.ENEMY;
+    }
+
+    public Thread getChangeDirectionThread(){
+        return changeDirectionThread;
     }
 }

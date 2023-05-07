@@ -1,83 +1,99 @@
 package Controller;
 
 import Model.A_GameModel;
-import Model.Character;
-import Model.Enemy;
-import Model.Pacman;
 import View.A_GameView;
-import View.PacmanView;
 
 import javax.swing.*;
 
-import Enum.Direction;
+import Enum.*;
 
-import java.awt.*;
+import java.util.HashSet;
 
 public class A_GameController {
     private final A_GameModel gameModel;
     private final A_GameView gameView;
 
-    Pacman pacman;
+    private HashSet<Thread> controllerThreads = new HashSet<>();
 
     public A_GameController(A_GameModel gameModel, A_GameView gameView) {
         this.gameModel = gameModel;
         this.gameView = gameView;
 
-        this.pacman = gameModel.getGameBoard().getPacman();
-        // Add listeners to handle user input and update the model and view accordingly
-        startGame();
+        configView();
     }
 
-    public void startGame(){
-        // Create game board
+    public void configView(){
+        // Get game board from Model to display it in View
         JTable gameBoard = gameModel.getGameBoard().getTable();
-        gameView.showGameWindow(gameBoard, this);
+        gameView.setNumberOfRows(getNumberOfRows());
+        gameView.showGameWindow(gameBoard);
 
+        // Start redrawing game board
         notifyViewToRedrawBoard();
+        checkForGameOver();
 
+        // Start listening to user input
         KeyController keyController = new KeyController(this);
         gameView.getGameWindow().addKeyListener(keyController);
-
-        gameModel.getGameBoard().getCharacters().forEach(Character::moveCharacter);
     }
 
     public void notifyViewToRedrawBoard(){
-
-        new Thread(() -> {
-            while (true) {
+        Thread redrawThread = new Thread(() -> {
+            while (!gameModel.getGameOver()) { // CHANGE !!!
                 try {
                     Thread.sleep(15);
                 } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
                 }
-                gameView.redrawGameBoard();
 
-//                KeyboardFocusManager keyboardFocusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-//
-//                // Get the component that currently has focus
-//                Component focusedComponent = keyboardFocusManager.getFocusOwner();
-//
-//                // Print the focused component
-//                System.out.println("Focused component: " + focusedComponent);
+                Direction pacmanDirection = gameModel.getPacmanDirection();
+                gameView.redrawGameBoard(pacmanDirection); // Pass score and time to this method form Model too
             }
-        }).start();
+        });
+        redrawThread.start();
+        controllerThreads.add(redrawThread);
+    }
 
+    public void checkForGameOver(){
+        Thread checkForGameOverThread = new Thread(() -> {
+            while (!gameModel.getGameOver()) { // CHANGE !!!
+                try {
+                    Thread.sleep(15);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                if (gameModel.getGameOver()){
+                    gameOver();
+                }
+            }
+        });
+        checkForGameOverThread.start();
+        controllerThreads.add(checkForGameOverThread);
     }
 
     public void movePacman(Direction direction) {
-        pacman.setDirection(direction);
-        // Notify the View to update the display after moving the Pacman
-        gameView.redrawGameBoard();
+        gameModel.getPacman().setDirection(direction);
     }
 
-    public Pacman getPacman(){
-        return pacman;
+    public int getNumberOfRows(){
+        return gameModel.getGameBoard().getRowCount();
     }
 
-    public Enemy getEnemy(){
-        if (gameModel.getGameBoard().getEnemies().size() != 0)
-            return gameModel.getGameBoard().getEnemies().get(0);
-        else return null;
+    public void stop(){
+        for (Thread t : controllerThreads){
+            try{
+                t.join();
+            }catch (InterruptedException e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void gameOver(){
+        System.out.println("game over");
+        gameModel.stop();
+        this.stop();
     }
     // Add methods to manage game state and handle events like collisions or power-up activations
 }
