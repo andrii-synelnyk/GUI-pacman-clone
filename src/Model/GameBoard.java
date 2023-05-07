@@ -7,15 +7,12 @@ import Enum.CellContent;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class GameBoard extends AbstractTableModel {
+public class GameBoard {
     private int rows;
     private int columns;
     private Cell[][] board;
-    private JTable table;
 
     private HashMap<Character, Cell> characterCells;
-
-    private A_GameModel gameModel; // REMOVE
 
     // DEBUG
     public HashSet<Cell> foods = new HashSet<>();
@@ -61,17 +58,14 @@ public class GameBoard extends AbstractTableModel {
         }
     }
 
-    public GameBoard(int rows, int columns, A_GameModel gameModel) {
+    public GameBoard(int rows, int columns) {
         this.rows = rows;
         this.columns = columns;
         this.board = new Cell[rows][columns];
-        this.table = new JTable(this);
-
-        this.gameModel = gameModel;
 
         characterCells = new HashMap<>();
 
-        table.setFocusable(false);
+        //table.setFocusable(false);
 
         initBoard();
     }
@@ -130,10 +124,6 @@ public class GameBoard extends AbstractTableModel {
         return board[row][column];
     }
 
-    public A_GameModel getGameModel(){
-        return gameModel;
-    }
-
     public Cell getRandomAvailableCell() {
         List<Cell> emptyCells = new ArrayList<>();
 
@@ -153,31 +143,11 @@ public class GameBoard extends AbstractTableModel {
         }
     }
 
-    @Override
-    public int getRowCount() {
+    public int getRowCount(){
         return rows;
     }
 
-    @Override
-    public int getColumnCount() {
+    public int getColumnCount(){
         return columns;
-    }
-
-    @Override
-    public Object getValueAt(int rowIndex, int columnIndex) {
-        return board[rowIndex][columnIndex].getContent();
-    }
-
-    @Override
-    public void setValueAt(Object value, int rowIndex, int columnIndex) {
-    }
-
-    @Override
-    public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return false;
-    }
-
-    public JTable getTable() {
-        return table;
     }
 }

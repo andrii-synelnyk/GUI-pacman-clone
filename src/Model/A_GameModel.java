@@ -11,7 +11,8 @@ import Enum.*;
 
 public class A_GameModel {
     private GameBoard gameBoard;
-
+    private GameBoardTableModel gameBoardTableModel;
+    private JTable gameTable;
     private int score;
 
     private boolean gameOver = false;
@@ -30,8 +31,12 @@ public class A_GameModel {
         enemies = new ArrayList<>();
         characters = new HashSet<>();
 
-        // Create the game board
-        this.gameBoard = new GameBoard(rows, columns, this);
+        // Initialize the game board and table model
+        gameBoard = new GameBoard(rows, columns);
+        gameBoardTableModel = new GameBoardTableModel(gameBoard);
+
+        // Create the JTable with the table model
+        gameTable = new JTable(gameBoardTableModel);
 
         // Create and place player on the board
         pacman = new Pacman(gameBoard);
@@ -190,5 +195,9 @@ public class A_GameModel {
                 e.printStackTrace();
             }
         }
+    }
+
+    public JTable getGameTable(){
+        return gameTable;
     }
 }

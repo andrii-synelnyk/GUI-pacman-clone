@@ -24,7 +24,7 @@ public class A_GameController {
 
     public void configView(){
         // Get game board from Model to display it in View
-        JTable gameBoard = gameModel.getGameBoard().getTable();
+        JTable gameBoard = gameModel.getGameTable();
         gameView.setNumberOfRows(getNumberOfRows());
         gameView.showGameWindow(gameBoard);
 
