@@ -120,4 +120,15 @@ public class A_GameView {
 
         return gameTable;
     }
+
+    public void stopCharacterViewThreads(){
+        pacmanView.setIsRunning(false);
+        enemyView.setIsRunning(false);
+        try {
+            pacmanView.getViewThread().join();
+            enemyView.getViewThread().join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 }

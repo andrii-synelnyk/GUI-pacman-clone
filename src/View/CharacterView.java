@@ -7,6 +7,7 @@ public class CharacterView implements Icon {
 
     protected int width;
     protected int height;
+    protected boolean isRunning = true;
 
     public CharacterView(int size){
         this.width = size;
@@ -28,6 +29,10 @@ public class CharacterView implements Icon {
     public void setNewImageSize(int size){
         this.width = size;
         this.height = size;
+    }
+
+    public void setIsRunning(boolean isRunning){
+        this.isRunning = isRunning;
     }
 
 }

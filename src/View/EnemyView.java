@@ -10,18 +10,30 @@ public class EnemyView extends CharacterView {
     private Color enemyColor;
 
     private int animationFrame = 1;
+    Thread enemyViewThread;
 
     public EnemyView(int size) {
         super(size);
 
         this.enemyColor = Color.red;
 
+        enemyViewThread = new Thread(() -> {
+            while (isRunning) {
+                try {
+                    Thread.sleep(300);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                if (animationFrame == 1) animationFrame = 2;
+                else animationFrame = 1;
+            }
+        });
+        enemyViewThread.start();
     }
 
     @Override
     public void paintIcon(Component c, Graphics g, int x, int y) {
-        if (animationFrame == 1) animationFrame = 2;
-        else animationFrame = 1;
 
         g.setColor(enemyColor);
 
@@ -50,4 +62,7 @@ public class EnemyView extends CharacterView {
         g.fillOval(x + width * 5 / 8, y + height * 5 / 16, width / 8, height / 8);
     }
 
+    public Thread getViewThread(){
+        return enemyViewThread;
+    }
 }

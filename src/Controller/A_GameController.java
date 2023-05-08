@@ -121,6 +121,7 @@ public class A_GameController {
 
     public void gameOver(){
         System.out.println("game over");
+        gameView.stopCharacterViewThreads();
         gameModel.stop();
         this.stop();
     }
