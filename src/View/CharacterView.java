@@ -25,4 +25,9 @@ public class CharacterView implements Icon {
         return height;
     }
 
+    public void setNewImageSize(int size){
+        this.width = size;
+        this.height = size;
+    }
+
 }

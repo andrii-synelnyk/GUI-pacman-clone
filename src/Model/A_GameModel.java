@@ -39,6 +39,7 @@ public class A_GameModel {
 
         // Create the JTable with the table model
         gameTable = new JTable(gameBoardTableModel);
+        gameTable.setFocusable(false); // not to lose focus from game window if user clicks on table
 
         // Create and place player on the board
         pacman = new Pacman(gameBoard);

@@ -14,7 +14,7 @@ public class GameWindow extends JFrame {
     public GameWindow(JTable gameBoard) {
         setTitle("Pacman Game");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setResizable(false);
+        //setResizable(false);
         setFocusable(true); // Needed to accept user key input
         gameTable = gameBoard;
 
@@ -29,6 +29,10 @@ public class GameWindow extends JFrame {
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
+    }
+
+    public void setGameTable(JTable gameTable){
+        this.gameTable = gameTable;
     }
 
     public void redrawBoard() {

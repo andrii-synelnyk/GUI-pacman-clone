@@ -26,6 +26,7 @@ public class A_GameController {
         // Get game board from Model to display it in View
         JTable gameBoard = gameModel.getGameTable();
         gameView.setNumberOfRows(getNumberOfRows());
+        gameView.setNumberOfColumns(getNumberOfColumns());
         gameView.showGameWindow(gameBoard);
 
         // Start redrawing game board
@@ -102,6 +103,10 @@ public class A_GameController {
 
     public int getNumberOfRows(){
         return gameModel.getGameBoard().getRowCount();
+    }
+
+    public int getNumberOfColumns(){
+        return gameModel.getGameBoard().getColumnCount();
     }
 
     public void stop(){
