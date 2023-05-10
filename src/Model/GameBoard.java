@@ -71,27 +71,42 @@ public class GameBoard {
     }
 
     private void initBoard() {
-        // Fill the board with empty cells
+        // Fill the board with walls
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < columns; col++) {
-                board[row][col] = new Cell(row, col, CellContent.EMPTY);
+                board[row][col] = new Cell(row, col, CellContent.WALL);
             }
         }
 
-        // Initialize the outer walls (rewrite cells which were originally occupied by food)
-        for (int row = 0; row < rows; row++) {
-            board[row][0] = new Cell(row, 0, CellContent.WALL);
-            board[row][columns - 1] = new Cell(row, columns - 1, CellContent.WALL);
-        }
-        for (int col = 0; col < columns; col++) {
-            board[0][col] = new Cell(0, col, CellContent.WALL);
-            board[rows - 1][col] = new Cell(rows - 1, col, CellContent.WALL);
-        }
+        // Generate maze using randomized Prim's algorithm
+        Random random = new Random();
+        List<Cell> frontier = new ArrayList<>();
+        int startRow = random.nextInt(rows / 2) * 2 + 1;
+        int startCol = random.nextInt(columns / 2) * 2 + 1;
+        Cell startCell = new Cell(startRow, startCol, CellContent.EMPTY);
+        board[startRow][startCol] = startCell;
+        frontier.add(startCell);
 
-        // Initialize the inner walls
-        for (int row = 2; row < rows - 2; row += 2) {
-            for (int col = 2; col < columns - 2; col += 2) {
-                board[row][col] = new Cell(row, col, CellContent.WALL);
+        int[][] directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+
+        while (!frontier.isEmpty()) {
+            // Choose a random cell from the frontier list
+            Cell current = frontier.remove(random.nextInt(frontier.size()));
+
+            // Look for a neighboring cell in the maze
+            for (int[] direction : directions) {
+                int newRow = current.getRow() + direction[0] * 2;
+                int newCol = current.getColumn() + direction[1] * 2;
+
+                if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < columns && board[newRow][newCol].getContent() == CellContent.WALL) {
+                    // Add the neighboring cell to the frontier and connect it to the current cell
+                    Cell newCell = new Cell(newRow, newCol, CellContent.EMPTY);
+                    board[newRow][newCol] = newCell;
+                    frontier.add(newCell);
+
+                    // Remove the wall between the current cell and the new cell
+                    board[current.getRow() + direction[0]][current.getColumn() + direction[1]].setContent(CellContent.EMPTY);
+                }
             }
         }
 
