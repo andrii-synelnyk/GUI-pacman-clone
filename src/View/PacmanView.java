@@ -30,7 +30,7 @@ public class PacmanView extends CharacterView {
                 if (mouthOpened == 120 || mouthOpened == 0) {
                     mouthFullyOpened = !mouthFullyOpened;
                 }
-                System.out.println("updated pacmanView");
+                //System.out.println("updated pacmanView");
             }
         });
         pacmanViewThread.start();
