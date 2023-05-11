@@ -155,13 +155,11 @@ public class GameBoard {
 
                             if (board[newRow][newCol].getContent() == CellContent.WALL) {
                                 wallCount++;
-                                System.out.println(wallCount);
                                 wallCellsAround.add(board[newRow][newCol]);
                             }
                         }
 
                         if (wallCount == 3) {
-                            System.out.println("bla");
                             int indexOfCellToChange = ThreadLocalRandom.current().nextInt(0, wallCellsAround.size());
                             Cell cellToChange = wallCellsAround.get(indexOfCellToChange);
                             board[cellToChange.getRow()][cellToChange.getColumn()] = new Cell(cellToChange.getRow(), cellToChange.getColumn(), CellContent.FOOD);

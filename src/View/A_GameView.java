@@ -36,9 +36,10 @@ public class A_GameView {
             public void componentResized(ComponentEvent e) {
                 keepAspectRatio();
                 resizeContents(gameBoard);
-                System.out.println("resized");
+                //System.out.println("resized");
             }
         });
+        setFontSize();
     }
 
     private int calculateImageSize(int rows, int columns) {
@@ -56,7 +57,7 @@ public class A_GameView {
     private int calculateNewImageSize(int rows, int columns){
         // Replace these constants with the desired dimensions of your game view
         final int gameViewWidth = gameWindow.getWidth();
-        final int gameViewHeight = gameWindow.getHeight() - 65; // - 50 to accommodate height of the Time-Score bar and app bar
+        final int gameViewHeight = gameWindow.getHeight() - gameWindow.getHeightOfTopPanel() - 30; // 30 is height of top app bar (depends on resolution of the screen and operating system)
 
         int widthPerCell = gameViewWidth / columns;
         int heightPerCell = gameViewHeight / rows;
@@ -81,7 +82,7 @@ public class A_GameView {
     public void keepAspectRatio(){
         // Calculate new width and height based on aspect ratio
         int newWidth = gameWindow.getWidth();
-        int newHeight = (int) Math.round(newWidth * aspectRatio) + 65;
+        int newHeight = (int) Math.round(newWidth * aspectRatio) + gameWindow.getHeightOfTopPanel() + 30; // 30 is height of top app bar (depends on resolution of the screen and operating system)
 
         // Set the new size while maintaining aspect ratio
         gameWindow.setSize(newWidth, newHeight);
@@ -93,6 +94,8 @@ public class A_GameView {
         enemyView.setNewImageSize(imageSize);
         JTable resizedTable = configGameBoard(gameBoard);
         gameWindow.setGameTable(resizedTable);
+        // Set font size for score, time, lives panel
+        setFontSize();
     }
 
     public JTable configGameBoard(JTable gameTable){
@@ -135,5 +138,12 @@ public class A_GameView {
 
     public MenuWindow getMenuWindow(){
         return menu;
+    }
+
+    public void setFontSize() {
+        int defaultImageSize = calculateImageSize(numberOfRows, numberOfColumns);
+        double scaleFactor = (double) imageSize / defaultImageSize;
+        int fontSize = (int) (20 * scaleFactor);
+        gameWindow.setFontSize(fontSize);
     }
 }

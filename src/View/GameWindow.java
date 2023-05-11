@@ -12,6 +12,8 @@ public class GameWindow extends JFrame {
     private JLabel scoreLabel;
     private JLabel livesLabel;
 
+    private JPanel timeScorePanel;
+
     public GameWindow(JTable gameBoard) {
         setTitle("Pacman Game");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -28,6 +30,7 @@ public class GameWindow extends JFrame {
 
 
         pack();
+        System.out.println("packed");
         setLocationRelativeTo(null);
         setVisible(true);
     }
@@ -47,32 +50,32 @@ public class GameWindow extends JFrame {
         scoreLabel = new JLabel("Score: 0");
         timeLabel = new JLabel("Time: 00:00");
 
-        livesLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        livesLabel.setFont(new Font("Arial", Font.BOLD, 20));
         livesLabel.setForeground(Color.WHITE);
 
-        scoreLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        scoreLabel.setFont(new Font("Arial", Font.BOLD, 20));
         scoreLabel.setForeground(Color.WHITE);
 
-        timeLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        timeLabel.setFont(new Font("Arial", Font.BOLD, 20));
         timeLabel.setForeground(Color.WHITE);
 
-        JPanel timeScorePanel = new JPanel();
-        timeScorePanel.setLayout(new GridLayout(1, 3));
+        timeScorePanel = new JPanel();
+        timeScorePanel.setLayout(new GridLayout(1, 3)); // can remove rows and cols, do not do anything
 
         JPanel livesPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         livesPanel.add(livesLabel);
         timeScorePanel.add(livesPanel);
         livesPanel.setBackground(Color.BLACK);
 
-        JPanel cellPanel1 = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        cellPanel1.add(scoreLabel);
-        timeScorePanel.add(cellPanel1);
-        cellPanel1.setBackground(Color.BLACK);
+        JPanel scorePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        scorePanel.add(scoreLabel);
+        timeScorePanel.add(scorePanel);
+        scorePanel.setBackground(Color.BLACK);
 
-        JPanel cellPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        cellPanel.add(timeLabel);
-        timeScorePanel.add(cellPanel);
-        cellPanel.setBackground(Color.BLACK);
+        JPanel timePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        timePanel.add(timeLabel);
+        timeScorePanel.add(timePanel);
+        timePanel.setBackground(Color.BLACK);
 
         return timeScorePanel;
     }
@@ -92,4 +95,15 @@ public class GameWindow extends JFrame {
         livesLabel.setText("Lives: " + lives);
     }
 
+    public void setFontSize(int fontSize){
+        livesLabel.setFont(new Font("Arial", Font.BOLD, fontSize));
+        scoreLabel.setFont(new Font("Arial", Font.BOLD, fontSize));
+        timeLabel.setFont(new Font("Arial", Font.BOLD, fontSize));
+        System.out.println(timeScorePanel.getWidth());
+        System.out.println(gameTable.getWidth());
+    }
+
+    public int getHeightOfTopPanel(){
+        return timeScorePanel.getHeight();
+    }
 }
