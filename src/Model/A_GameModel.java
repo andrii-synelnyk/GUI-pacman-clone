@@ -30,12 +30,14 @@ public class A_GameModel {
 
     private int livesRemaining;
 
-    public A_GameModel(int rows, int columns) {
+    public A_GameModel() {
         this.score = 0;
         this.livesRemaining = 2;
         enemies = new ArrayList<>();
         characters = new HashSet<>();
+    }
 
+    public void initiateGameLogic(int rows, int columns){
         // Initialize the game board and table model
         gameBoard = new GameBoard(rows, columns);
         gameBoardTableModel = new GameBoardTableModel(gameBoard);

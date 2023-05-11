@@ -6,6 +6,8 @@ import View.A_GameView;
 import javax.swing.*;
 
 import Enum.*;
+import View.GameWindow;
+import View.MenuWindow;
 
 import java.util.HashSet;
 
@@ -19,6 +21,39 @@ public class A_GameController {
         this.gameModel = gameModel;
         this.gameView = gameView;
 
+        listenToMenuActions();
+    }
+
+    public void listenToMenuActions(){
+        Thread menuListener = new Thread(() -> {
+            while (!gameModel.getGameOver()) {
+                try {
+                    Thread.sleep(15);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                MenuWindow menu = gameView.getMenuWindow();
+
+                boolean newGame = menu.getNewGame();
+                boolean highScore = menu.getHighScore();
+                boolean exit = menu.getExit();
+
+                if (newGame) {
+                    int rowsInput = menu.getRowsInput();
+                    int columnsInput = menu.getColumnsInput();
+                    startNewGame(rowsInput, columnsInput);
+                    menu.setNewGame(false);
+                }else if (highScore){
+
+                }else if (exit) System.exit(0);
+            }
+        });
+        menuListener.start();
+        controllerThreads.add(menuListener);
+    }
+
+    public void startNewGame(int rowsInput, int columnsInput){
+        gameModel.initiateGameLogic(rowsInput, columnsInput);
         configView();
     }
 

@@ -10,6 +10,7 @@ import java.awt.event.ComponentEvent;
 public class A_GameView {
 
     GameWindow gameWindow;
+    MenuWindow menu;
     int imageSize;
     private PacmanView pacmanView;
     private EnemyView enemyView;
@@ -18,7 +19,7 @@ public class A_GameView {
     private double aspectRatio;
 
     public A_GameView() {
-
+        menu = new MenuWindow();
     }
 
     public void showGameWindow(JTable gameBoard){
@@ -130,5 +131,9 @@ public class A_GameView {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    public MenuWindow getMenuWindow(){
+        return menu;
     }
 }
