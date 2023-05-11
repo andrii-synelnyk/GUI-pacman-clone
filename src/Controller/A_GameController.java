@@ -48,10 +48,12 @@ public class A_GameController {
                     e.printStackTrace();
                 }
 
+                int lives = gameModel.getLivesRemaining();
                 int score = gameModel.getScore();
                 int time = gameModel.getTime();
 
                 SwingUtilities.invokeLater(() -> {
+                    gameView.getGameWindow().updateLives(lives);
                     gameView.getGameWindow().updateTime(time);
                     gameView.getGameWindow().updateScore(score);
                     gameView.getGameWindow().redrawBoard();

@@ -10,6 +10,7 @@ public class GameWindow extends JFrame {
 
     private JLabel timeLabel;
     private JLabel scoreLabel;
+    private JLabel livesLabel;
 
     public GameWindow(JTable gameBoard) {
         setTitle("Pacman Game");
@@ -42,8 +43,12 @@ public class GameWindow extends JFrame {
     }
 
     private JPanel createTimeScorePanel() {
+        livesLabel = new JLabel("Lives: 2");
         scoreLabel = new JLabel("Score: 0");
         timeLabel = new JLabel("Time: 00:00");
+
+        livesLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        livesLabel.setForeground(Color.WHITE);
 
         scoreLabel.setFont(new Font("Arial", Font.BOLD, 24));
         scoreLabel.setForeground(Color.WHITE);
@@ -52,7 +57,12 @@ public class GameWindow extends JFrame {
         timeLabel.setForeground(Color.WHITE);
 
         JPanel timeScorePanel = new JPanel();
-        timeScorePanel.setLayout(new GridLayout(1, 2));
+        timeScorePanel.setLayout(new GridLayout(1, 3));
+
+        JPanel livesPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        livesPanel.add(livesLabel);
+        timeScorePanel.add(livesPanel);
+        livesPanel.setBackground(Color.BLACK);
 
         JPanel cellPanel1 = new JPanel(new FlowLayout(FlowLayout.CENTER));
         cellPanel1.add(scoreLabel);
@@ -76,6 +86,10 @@ public class GameWindow extends JFrame {
 
     public void updateScore(int score) {
         scoreLabel.setText("Score: " + score);
+    }
+
+    public void updateLives(int lives){
+        livesLabel.setText("Lives: " + lives);
     }
 
 }

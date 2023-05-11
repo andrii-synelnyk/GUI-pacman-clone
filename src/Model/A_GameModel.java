@@ -28,8 +28,11 @@ public class A_GameModel {
 
     private int time;
 
+    private int livesRemaining;
+
     public A_GameModel(int rows, int columns) {
         this.score = 0;
+        this.livesRemaining = 2;
         enemies = new ArrayList<>();
         characters = new HashSet<>();
 
@@ -84,7 +87,7 @@ public class A_GameModel {
                     }
                 }
 
-                checkForGameOver(); // Check for game over after updating the character position
+                checkForDeathOrGameOver(); // Check for game over after updating the character position
 
                 try {
                     Thread.sleep(characterWhoCalled.timeInterval); // Wait till the next move
@@ -158,7 +161,7 @@ public class A_GameModel {
         return time;
     }
 
-    public void checkForGameOver() {
+    public void checkForDeathOrGameOver() {
         GameBoard.Cell pacmanCell = gameBoard.getCharacterCell(pacman);
         boolean collisionDetected = false;
 
@@ -171,7 +174,9 @@ public class A_GameModel {
         }
 
         if (collisionDetected) {
-            gameOver = true; // Controller constantly monitors this flag
+            livesRemaining--;
+            if (livesRemaining == 0) gameOver = true; // Controller constantly monitors this flag
+            else revivePacman();
         }
     }
 
@@ -226,5 +231,13 @@ public class A_GameModel {
 
     public JTable getGameTable(){
         return gameTable;
+    }
+
+    public void revivePacman(){
+        gameBoard.setCharacterCell(pacman, 1, 1, pacman.getType());
+    }
+
+    public int getLivesRemaining(){
+        return livesRemaining;
     }
 }
