@@ -88,6 +88,7 @@ public class GameWindow extends JFrame {
     }
 
     public void updateScore(int score) {
+        if (score < 0) score = 0;
         scoreLabel.setText("Score: " + score);
     }
 

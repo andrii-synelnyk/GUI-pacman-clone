@@ -32,7 +32,7 @@ public class A_GameModel {
 
     public A_GameModel() {
         this.score = 0;
-        this.livesRemaining = 1;
+        this.livesRemaining = 2;
         enemies = new ArrayList<>();
         characters = new HashSet<>();
     }
@@ -181,7 +181,7 @@ public class A_GameModel {
 
         if (collisionDetected) {
             livesRemaining--;
-            if (livesRemaining == 0) gameOver = true; // Controller constantly monitors this flag
+            if (livesRemaining <= 0) gameOver = true; // Controller constantly monitors this flag
             else revivePacman();
         }
     }
@@ -250,6 +250,7 @@ public class A_GameModel {
     }
 
     public void revivePacman(){
+        gameBoard.getCharacterCell(pacman).setContent(CellContent.ENEMY);
         gameBoard.setCharacterCell(pacman, 1, 1, pacman.getType());
     }
 
