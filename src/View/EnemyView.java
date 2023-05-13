@@ -28,6 +28,7 @@ public class EnemyView extends CharacterView {
                 if (animationFrame == 1) animationFrame = 2;
                 else animationFrame = 1;
             }
+            System.out.println("quit enemy view");
         });
         enemyViewThread.start();
     }

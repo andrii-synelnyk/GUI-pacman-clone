@@ -9,6 +9,7 @@ import Enum.*;
 import View.GameWindow;
 import View.MenuWindow;
 
+import java.awt.*;
 import java.util.HashSet;
 
 public class A_GameController {
@@ -17,18 +18,23 @@ public class A_GameController {
 
     private HashSet<Thread> controllerThreads = new HashSet<>();
 
+    KeyController keyController;
+
     public A_GameController(A_GameModel gameModel, A_GameView gameView) {
         this.gameModel = gameModel;
         this.gameView = gameView;
+
+        keyController = new KeyController(this);
 
         listenToMenuActions();
     }
 
     public void listenToMenuActions(){
         Thread menuListener = new Thread(() -> {
-            while (!gameModel.getGameOver()) {
+            while (gameView.getMenuWindow().isVisible()) {
                 try {
                     Thread.sleep(15);
+                    //System.out.println("menuListener");
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -49,7 +55,7 @@ public class A_GameController {
             }
         });
         menuListener.start();
-        controllerThreads.add(menuListener);
+        //controllerThreads.add(menuListener);
     }
 
     public void startNewGame(int rowsInput, int columnsInput){
@@ -70,7 +76,7 @@ public class A_GameController {
         changePacmanDirection();
 
         // Start listening to user input
-        KeyController keyController = new KeyController(this);
+
         gameView.getGameWindow().addKeyListener(keyController);
     }
 
@@ -121,6 +127,7 @@ public class A_GameController {
             while (!gameModel.getGameOver()) { // CHANGE !!!
                 try {
                     Thread.sleep(15);
+                    //System.out.println(Thread.currentThread().getName());
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -147,6 +154,11 @@ public class A_GameController {
     }
 
     public void stop(){
+        // remove checkForGameOverThread from controllerThreads, because it is the thread that is calling this method,
+        // therefore, it cannot join itself. But it because gameOver is false now, it will exit the loop and terminate anyway
+        Thread currentThread = Thread.currentThread();
+        controllerThreads.remove(currentThread);
+
         for (Thread t : controllerThreads){
             try{
                 t.join();
@@ -157,10 +169,22 @@ public class A_GameController {
     }
 
     public void gameOver(){
-        System.out.println("game over");
+        System.out.println("started game over method");
         gameView.stopCharacterViewThreads();
         gameModel.stop();
         this.stop();
+        System.out.println("finished game over method");
     }
-    // Add methods to manage game state and handle events like collisions or power-up activations
+
+
+    public void interruptWithShortcut(){
+        System.out.println("started interrupt method");
+        if (!gameModel.getGameOver()) gameModel.setGameOver(true);
+        for (Window window : Window.getWindows()) {
+            window.dispose();
+        }
+        gameView.getMenuWindow().setVisible(true);
+        listenToMenuActions();
+        System.out.println("finished interrupt method");
+    }
 }

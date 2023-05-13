@@ -15,7 +15,7 @@ public class A_GameModel {
     private JTable gameTable;
     private int score;
 
-    private boolean gameOver = false;
+    private volatile boolean gameOver = false;
 
     private Pacman pacman;
 
@@ -32,12 +32,14 @@ public class A_GameModel {
 
     public A_GameModel() {
         this.score = 0;
-        this.livesRemaining = 2;
+        this.livesRemaining = 1;
         enemies = new ArrayList<>();
         characters = new HashSet<>();
     }
 
     public void initiateGameLogic(int rows, int columns){
+        gameOver = false;
+
         // Initialize the game board and table model
         gameBoard = new GameBoard(rows, columns);
         gameBoardTableModel = new GameBoardTableModel(gameBoard);
@@ -97,6 +99,7 @@ public class A_GameModel {
                     e.printStackTrace();
                 }
             }
+            System.out.println("quit move thread");
         });
         moveCharacterThread.start();
         modelThreads.add(moveCharacterThread);
@@ -154,6 +157,7 @@ public class A_GameModel {
                 }
                 time++;
             }
+            System.out.println("quit time thread");
         });
         timerThread.start();
         modelThreads.add(timerThread);
@@ -198,37 +202,47 @@ public class A_GameModel {
 
     public void useSpeedPowerUp(){
         Thread powerUpThread = new Thread(() -> {
-            pacman.timeInterval = 150;
-            try {
-                Thread.sleep(7000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            if (!gameOver) {
+                pacman.timeInterval = 150;
+                try {
+                    Thread.sleep(7000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                pacman.timeInterval = 300;
             }
-            pacman.timeInterval = 300;
         });
         powerUpThread.start();
         modelThreads.add(powerUpThread);
     }
 
     public void stop(){
+        this.score = 0;
+        this.time = 0;
+        this.livesRemaining = 2;
+        this.characters.clear();
         // Join threads in Model class (moving characters, power-ups activations)
-        for (Thread t : modelThreads){
-            try{
-                t.join();
-            }catch (InterruptedException e){
-                e.printStackTrace();
-            }
-        }
-
-        // Join threads in Enemy class (choosing new direction)
+//        for (Thread t : modelThreads){
+//            try{
+//                t.join();
+//            }catch (InterruptedException e){
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        // Join threads in Enemy class (choosing new direction)
         for (Enemy enemy : enemies) {
             enemy.setIsRunning(false);
-            try {
-                enemy.getChangeDirectionThread().join();
-            }catch (Exception e){
-                e.printStackTrace();
-            }
+//            try {
+//                enemy.getChangeDirectionThread().join();
+//            }catch (Exception e){
+//                e.printStackTrace();
+//            }
         }
+        this.enemies.clear();
+        this.modelThreads.clear();
+
+        System.out.println("stopped model");
     }
 
     public JTable getGameTable(){
@@ -242,4 +256,6 @@ public class A_GameModel {
     public int getLivesRemaining(){
         return livesRemaining;
     }
+
+    public void setGameOver(boolean gameOver) { this.gameOver = gameOver; } // for interrupting the game when Ctrl Shift Q is pressed
 }

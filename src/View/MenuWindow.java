@@ -8,7 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class MenuWindow {
+public class MenuWindow extends JFrame{
 
     private boolean newGame;
     private boolean highScore;
@@ -25,51 +25,39 @@ public class MenuWindow {
         showMenu();
     }
 
-    public void showMenu(){
-        JFrame mainMenuFrame = new JFrame("Pacman - Main Menu");
-        mainMenuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        mainMenuFrame.setSize(300, 200);
+    public void showMenu() {
+        setTitle("Pacman - Main Menu");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(300, 200);
 
         JPanel mainMenuPanel = new JPanel();
         mainMenuPanel.setLayout(new GridLayout(3, 1));
 
         JButton newGameButton = new JButton("New Game");
-        newGameButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                mainMenuFrame.setVisible(false);
-                mainMenuFrame.dispose();
+        newGameButton.addActionListener(e -> {
+            rows = promptBoardSize("Enter the number of rows (10 to 100):");
+            columns = promptBoardSize("Enter the number of columns (10 to 100):");
 
-                rows = promptBoardSize("Enter the number of rows (10 to 100):");
-                columns = promptBoardSize("Enter the number of columns (10 to 100):");
+            newGame = true;
 
-                newGame = true;
-            }
+            setVisible(false);
         });
 
         JButton highScoresButton = new JButton("High Scores");
-        highScoresButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Implement high scores functionality here
-            }
+        highScoresButton.addActionListener(e -> {
+            // Implement high scores functionality here
         });
 
         JButton exitButton = new JButton("Exit");
-        exitButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                exit = true;
-            }
-        });
+        exitButton.addActionListener(e -> exit = true);
 
         mainMenuPanel.add(newGameButton);
         mainMenuPanel.add(highScoresButton);
         mainMenuPanel.add(exitButton);
 
-        mainMenuFrame.add(mainMenuPanel);
-        mainMenuFrame.setLocationRelativeTo(null);
-        mainMenuFrame.setVisible(true);
+        add(mainMenuPanel);
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
     public boolean getNewGame(){
