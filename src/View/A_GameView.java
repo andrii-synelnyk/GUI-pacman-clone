@@ -6,6 +6,7 @@ import Enum.Direction;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.util.Map;
 
 public class A_GameView {
 
@@ -147,8 +148,8 @@ public class A_GameView {
         gameWindow.setFontSize(fontSize);
     }
 
-    public void showHighScoresWindow(){
-        HighScoresWindow highScoresWindow = new HighScoresWindow();
+    public void showHighScoresWindow(Map<String, Integer> sortedHighScores){
+        HighScoresWindow highScoresWindow = new HighScoresWindow(sortedHighScores);
     }
 
     public String showHighScoresInputWindow(){

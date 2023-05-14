@@ -38,14 +38,6 @@ public class A_GameModel {
         this.livesRemaining = 1;
         enemies = new ArrayList<>();
         characters = new HashSet<>();
-
-        File file = new File("high_scores.ser");
-        if (file.exists()) {
-            highScoreList = HighScoreList.loadHighScoresFromFile(file.getPath());
-            for (HighScore h : highScoreList.getHighScores()){
-                System.out.println(h.getName() + h.getScore());
-            }
-        } else highScoreList = new HighScoreList();
     }
 
     public void initiateGameLogic(int rows, int columns){
@@ -274,4 +266,13 @@ public class A_GameModel {
     public HighScoreList getHighScoreList(){
         return highScoreList;
     }
+
+    public HighScoreList loadOrCreateHighScoreList(){
+        File file = new File("high_scores.ser");
+        if (file.exists()) {
+            highScoreList = HighScoreList.loadHighScoresFromFile(file.getPath());
+        } else highScoreList = new HighScoreList();
+        return highScoreList;
+    }
+
 }

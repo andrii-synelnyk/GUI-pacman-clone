@@ -2,6 +2,7 @@ package Controller;
 
 import Model.A_GameModel;
 import Model.HighScore;
+import Model.HighScoreList;
 import View.A_GameView;
 
 import javax.swing.*;
@@ -10,6 +11,8 @@ import Enum.*;
 import View.MenuWindow;
 
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class A_GameController {
     private final A_GameModel gameModel;
@@ -20,7 +23,7 @@ public class A_GameController {
     MovementController movementController;
     CompoundShortcutController compoundShortcutController;
 
-    private boolean needToShowHighscoreInput = true;
+    private boolean needToAskForHighscoreInput = true;
 
     public A_GameController(A_GameModel gameModel, A_GameView gameView) {
         this.gameModel = gameModel;
@@ -54,6 +57,7 @@ public class A_GameController {
                     menu.setNewGame(false);
                 }else if (highScore){
                     showHighScores();
+                    menu.setHighScore(false);
                 }else if (exit) System.exit(0);
             }
         });
@@ -95,7 +99,7 @@ public class A_GameController {
                 int lives = gameModel.getLivesRemaining();
                 int score = gameModel.getScore();
                 int time = gameModel.getTime();
-                System.out.println("redraw");
+                //System.out.println("redraw");
                 SwingUtilities.invokeLater(() -> {
                     gameView.getGameWindow().updateLives(lives);
                     gameView.getGameWindow().updateTime(time);
@@ -174,12 +178,7 @@ public class A_GameController {
     public void gameOver(){
         System.out.println("started game over method");
 
-        if (needToShowHighscoreInput) {
-            String name = gameView.showHighScoresInputWindow();
-            gameModel.getHighScoreList().addHighScore(new HighScore(name, gameModel.getScore()));
-            gameModel.getHighScoreList().saveHighScoresToFile("high_scores.ser");
-        }
-        needToShowHighscoreInput = true;
+        askForHighScoreInput();
 
         gameView.stopCharacterViewThreads();
         gameModel.stop();
@@ -193,7 +192,7 @@ public class A_GameController {
         System.out.println("started interrupt method");
         if (!gameModel.getGameOver()) gameModel.setGameOver(true);
 
-        needToShowHighscoreInput = false;
+        needToAskForHighscoreInput = false; // because it is not regular game over
 
         gameView.closeGameWindow();
         gameView.getMenuWindow().setVisible(true);
@@ -202,6 +201,30 @@ public class A_GameController {
     }
 
     public void showHighScores(){
-        gameView.showHighScoresWindow();
+        HighScoreList highScoreList = gameModel.loadOrCreateHighScoreList();;
+        Map<String, Integer> sortedHighScores = sortHighScores(highScoreList);
+
+        gameView.showHighScoresWindow(sortedHighScores);
+    }
+
+    private Map<String, Integer> sortHighScores(HighScoreList highScoreList) {
+        Map<String, Integer> sortedHighScores = new LinkedHashMap<>();
+        highScoreList.getHighScores().stream()
+                .sorted((o1, o2) -> Integer.compare(o2.getScore(), o1.getScore()))
+                .forEach(highScore -> sortedHighScores.put(highScore.getName(), highScore.getScore()));
+        return sortedHighScores;
+    }
+
+    public void askForHighScoreInput(){
+        if (needToAskForHighscoreInput) {
+            String name = gameView.showHighScoresInputWindow();
+            gameModel.loadOrCreateHighScoreList();
+            gameModel.getHighScoreList().addHighScore(new HighScore(name, gameModel.getScore()));
+            gameModel.getHighScoreList().saveHighScoresToFile("high_scores.ser");
+            gameView.closeGameWindow();
+            gameView.getMenuWindow().setVisible(true);
+            listenToMenuActions(); // launch thread listening to menu actions
+        }
+        needToAskForHighscoreInput = true;
     }
 }

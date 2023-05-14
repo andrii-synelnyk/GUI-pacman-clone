@@ -47,8 +47,6 @@ public class MenuWindow extends JFrame{
         JButton highScoresButton = new JButton("High Scores");
         highScoresButton.addActionListener(e -> {
             highScore = true;
-
-            setVisible(false);
         });
 
         JButton exitButton = new JButton("Exit");
