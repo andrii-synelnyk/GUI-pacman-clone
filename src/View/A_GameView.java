@@ -146,4 +146,25 @@ public class A_GameView {
         int fontSize = (int) (20 * scaleFactor);
         gameWindow.setFontSize(fontSize);
     }
+
+    public void showHighScoresWindow(){
+        HighScoresWindow highScoresWindow = new HighScoresWindow();
+    }
+
+    public void showHighScoresInputWindow(){
+        String nameForHighScore = "";
+        while (nameForHighScore.isEmpty()) {
+            try {
+                BoardSizeInputDialog dialog = new BoardSizeInputDialog(null, "Enter a name under which you want to be saved in high scores:");
+                dialog.setVisible(true);
+                nameForHighScore = dialog.getInputString();
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Invalid input. Please enter a name for a high scores tab.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    public void closeGameWindow(){
+        gameWindow.dispose();
+    }
 }

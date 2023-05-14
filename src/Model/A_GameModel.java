@@ -32,7 +32,7 @@ public class A_GameModel {
 
     public A_GameModel() {
         this.score = 0;
-        this.livesRemaining = 2;
+        this.livesRemaining = 1;
         enemies = new ArrayList<>();
         characters = new HashSet<>();
     }
@@ -219,7 +219,7 @@ public class A_GameModel {
     public void stop(){
         this.score = 0;
         this.time = 0;
-        this.livesRemaining = 2;
+        this.livesRemaining = 1;
         this.characters.clear();
         // Join threads in Model class (moving characters, power-ups activations)
 //        for (Thread t : modelThreads){

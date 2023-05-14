@@ -6,10 +6,8 @@ import View.A_GameView;
 import javax.swing.*;
 
 import Enum.*;
-import View.GameWindow;
 import View.MenuWindow;
 
-import java.awt.*;
 import java.util.HashSet;
 
 public class A_GameController {
@@ -18,13 +16,17 @@ public class A_GameController {
 
     private HashSet<Thread> controllerThreads = new HashSet<>();
 
-    KeyController keyController;
+    MovementController movementController;
+    CompoundShortcutController compoundShortcutController;
+
+    private boolean needToShowHighscoreInput = true;
 
     public A_GameController(A_GameModel gameModel, A_GameView gameView) {
         this.gameModel = gameModel;
         this.gameView = gameView;
 
-        keyController = new KeyController(this);
+        movementController = new MovementController(this);
+        compoundShortcutController = new CompoundShortcutController(this);
 
         listenToMenuActions();
     }
@@ -50,7 +52,7 @@ public class A_GameController {
                     startNewGame(rowsInput, columnsInput);
                     menu.setNewGame(false);
                 }else if (highScore){
-
+                    showHighScores();
                 }else if (exit) System.exit(0);
             }
         });
@@ -76,8 +78,8 @@ public class A_GameController {
         changePacmanDirection();
 
         // Start listening to user input
-
-        gameView.getGameWindow().addKeyListener(keyController);
+        gameView.getGameWindow().addKeyListener(movementController);
+        gameView.getGameWindow().addKeyListener(compoundShortcutController);
     }
 
     public void redrawGameWindow(){
@@ -173,6 +175,10 @@ public class A_GameController {
         gameView.stopCharacterViewThreads();
         gameModel.stop();
         this.stop();
+
+        if (needToShowHighscoreInput) gameView.showHighScoresInputWindow();
+        needToShowHighscoreInput = true;
+
         System.out.println("finished game over method");
     }
 
@@ -180,11 +186,16 @@ public class A_GameController {
     public void interruptWithShortcut(){
         System.out.println("started interrupt method");
         if (!gameModel.getGameOver()) gameModel.setGameOver(true);
-        for (Window window : Window.getWindows()) {
-            window.dispose();
-        }
+
+        needToShowHighscoreInput = false;
+
+        gameView.closeGameWindow();
         gameView.getMenuWindow().setVisible(true);
-        listenToMenuActions();
+        listenToMenuActions(); // launch thread listening to menu actions
         System.out.println("finished interrupt method");
+    }
+
+    public void showHighScores(){
+        gameView.showHighScoresWindow();
     }
 }

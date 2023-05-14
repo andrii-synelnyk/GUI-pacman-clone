@@ -38,14 +38,17 @@ public class MenuWindow extends JFrame{
             rows = promptBoardSize("Enter the number of rows (10 to 100):");
             columns = promptBoardSize("Enter the number of columns (10 to 100):");
 
-            newGame = true;
-
-            setVisible(false);
+            if (rows != -1 && columns != -1) { // if user haven't pressed CANCEL button on both input dialogs
+                newGame = true;
+                setVisible(false);
+            }
         });
 
         JButton highScoresButton = new JButton("High Scores");
         highScoresButton.addActionListener(e -> {
-            // Implement high scores functionality here
+            highScore = true;
+
+            setVisible(false);
         });
 
         JButton exitButton = new JButton("Exit");
@@ -88,15 +91,16 @@ public class MenuWindow extends JFrame{
         return columns;
     }
 
-    private static int promptBoardSize(String message) {
+    private int promptBoardSize(String message) {
         int size = 0;
         while (size < 10 || size > 100) {
+            BoardSizeInputDialog dialog = new BoardSizeInputDialog(this, message);
+            dialog.setVisible(true);
             try {
-                String input = JOptionPane.showInputDialog(message);
-                if (input == null) {
-                    System.exit(0);
+                size = dialog.getInputInt();
+                if (size == -1) { // if cancel button is pressed
+                    return -1; // indicate that there was no input
                 }
-                size = Integer.parseInt(input);
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(null, "Invalid input. Please enter a number between 10 and 100.", "Error", JOptionPane.ERROR_MESSAGE);
             }

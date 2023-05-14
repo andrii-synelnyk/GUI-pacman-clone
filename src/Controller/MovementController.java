@@ -1,19 +1,14 @@
 package Controller;
 
-import Model.Pacman;
-
-import java.awt.*;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import Enum.Direction;
-import View.MenuWindow;
 
-public class KeyController implements KeyListener {
+public class MovementController implements KeyListener {
     private final A_GameController gameController;
 
-    public KeyController(A_GameController gameController) {
+    public MovementController(A_GameController gameController) {
         this.gameController = gameController;
     }
 
@@ -28,12 +23,7 @@ public class KeyController implements KeyListener {
     }
 
     @Override
-    public void keyPressed(KeyEvent e) {
-        if (e.isControlDown() && e.isShiftDown() && e.getKeyCode() == KeyEvent.VK_Q) {
-            System.out.println("Ctrl+Shift+Q pressed");
-            gameController.interruptWithShortcut();
-        }
-    }
+    public void keyPressed(KeyEvent e) {}
 
     @Override
     public void keyReleased(KeyEvent e) {}
