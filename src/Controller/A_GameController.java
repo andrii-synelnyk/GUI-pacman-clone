@@ -1,6 +1,7 @@
 package Controller;
 
 import Model.A_GameModel;
+import Model.HighScore;
 import View.A_GameView;
 
 import javax.swing.*;
@@ -94,7 +95,7 @@ public class A_GameController {
                 int lives = gameModel.getLivesRemaining();
                 int score = gameModel.getScore();
                 int time = gameModel.getTime();
-
+                System.out.println("redraw");
                 SwingUtilities.invokeLater(() -> {
                     gameView.getGameWindow().updateLives(lives);
                     gameView.getGameWindow().updateTime(time);
@@ -172,12 +173,17 @@ public class A_GameController {
 
     public void gameOver(){
         System.out.println("started game over method");
+
+        if (needToShowHighscoreInput) {
+            String name = gameView.showHighScoresInputWindow();
+            gameModel.getHighScoreList().addHighScore(new HighScore(name, gameModel.getScore()));
+            gameModel.getHighScoreList().saveHighScoresToFile("high_scores.ser");
+        }
+        needToShowHighscoreInput = true;
+
         gameView.stopCharacterViewThreads();
         gameModel.stop();
         this.stop();
-
-        if (needToShowHighscoreInput) gameView.showHighScoresInputWindow();
-        needToShowHighscoreInput = true;
 
         System.out.println("finished game over method");
     }

@@ -4,6 +4,7 @@ package Model;
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -30,11 +31,21 @@ public class A_GameModel {
 
     private int livesRemaining;
 
+    private HighScoreList highScoreList;
+
     public A_GameModel() {
         this.score = 0;
         this.livesRemaining = 1;
         enemies = new ArrayList<>();
         characters = new HashSet<>();
+
+        File file = new File("high_scores.ser");
+        if (file.exists()) {
+            highScoreList = HighScoreList.loadHighScoresFromFile(file.getPath());
+            for (HighScore h : highScoreList.getHighScores()){
+                System.out.println(h.getName() + h.getScore());
+            }
+        } else highScoreList = new HighScoreList();
     }
 
     public void initiateGameLogic(int rows, int columns){
@@ -259,4 +270,8 @@ public class A_GameModel {
     }
 
     public void setGameOver(boolean gameOver) { this.gameOver = gameOver; } // for interrupting the game when Ctrl Shift Q is pressed
+
+    public HighScoreList getHighScoreList(){
+        return highScoreList;
+    }
 }

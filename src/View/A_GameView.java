@@ -151,7 +151,7 @@ public class A_GameView {
         HighScoresWindow highScoresWindow = new HighScoresWindow();
     }
 
-    public void showHighScoresInputWindow(){
+    public String showHighScoresInputWindow(){
         String nameForHighScore = "";
         while (nameForHighScore.isEmpty()) {
             try {
@@ -162,6 +162,7 @@ public class A_GameView {
                 JOptionPane.showMessageDialog(null, "Invalid input. Please enter a name for a high scores tab.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
+        return nameForHighScore;
     }
 
     public void closeGameWindow(){
