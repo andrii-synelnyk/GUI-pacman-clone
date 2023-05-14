@@ -56,6 +56,10 @@ public class GameBoard {
         public Object getContentUnderneath(){
             return contentUnderneath;
         }
+
+        public void setContentUnderneath(Object contentUnderneath){
+            this.contentUnderneath = contentUnderneath;
+        }
     }
 
     public GameBoard(int rows, int columns) {
@@ -111,9 +115,6 @@ public class GameBoard {
             }
         }
 
-        // Place power-ups (use a loop to place multiple power-ups)
-        board[rows - 2][columns - 5] = new Cell(rows - 2, columns - 5, CellContent.POWER_UP);
-
         // Place food on empty cells
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < columns; col++) {
@@ -139,6 +140,9 @@ public class GameBoard {
         }
 
         removeDeadEnds();
+
+        // Place power-ups (use a loop to place multiple power-ups)
+        //board[1][columns - 7] = new Cell(1, columns - 7, CellContent.POWER_UP_INVINCIBLE);
     }
 
     public void removeDeadEnds(){
@@ -213,5 +217,10 @@ public class GameBoard {
         if (this.rows % 2 == 0) this.rows++;
         if (this.columns % 2 == 0) this.columns++;
         this.board = new Cell[rows][columns];
+    }
+
+    public void placePowerUp(Enemy enemyWhoCalled, Object powerUpType){
+        getCharacterCell(enemyWhoCalled).setContent(powerUpType);
+        getCharacterCell(enemyWhoCalled).setContentUnderneath(powerUpType);
     }
 }

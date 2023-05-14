@@ -2,18 +2,16 @@ package View;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class BoardSizeInputDialog extends JDialog {
+public class InputDialog extends JDialog {
     private JTextField inputField;
     private boolean isCanceled;
 
     private String dialogTitle;
 
-    public BoardSizeInputDialog(JFrame parent, String title) {
+    public InputDialog(JFrame parent, String title) {
         super(parent, title, true);
         this.dialogTitle = title;
 
@@ -28,6 +26,7 @@ public class BoardSizeInputDialog extends JDialog {
     }
 
     private void initComponents() {
+        setTitle("Input");
         setLayout(new BorderLayout());
 
         JPanel messagePanel = new JPanel();
@@ -77,12 +76,12 @@ public class BoardSizeInputDialog extends JDialog {
 
     private void handleOkButtonClick() {
         isCanceled = false;
-        setVisible(false);
+        dispose();
     }
 
     private void handleCancelButtonClick() {
         isCanceled = true;
-        setVisible(false);
+        dispose();
     }
 
     public int getInputInt() {

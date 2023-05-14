@@ -11,6 +11,8 @@ public abstract class Character {
 
     protected int timeInterval;
 
+    protected boolean freeze = false;
+
     public Character(GameBoard gameBoard) {
         this.gameBoard = gameBoard;
         direction = Direction.RIGHT; // RANDOMISE IF NOT PACMAN
@@ -33,4 +35,12 @@ public abstract class Character {
     public void setIsRunning(Boolean isRunning){
         this.isRunning = isRunning;
     } // CAN REMOVE IF ENEMY CLASS EXITS INNER THREAD BY CHECKING GAME OVER FROM GAME MODEL
+
+    public boolean isFrozen(){
+        return freeze;
+    }
+
+    public void setFreezeStatus(boolean freeze){
+        this.freeze = freeze;
+    }
 }

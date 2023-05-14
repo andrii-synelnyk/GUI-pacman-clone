@@ -1,12 +1,7 @@
 package View;
 
-import Controller.A_GameController;
-import Model.A_GameModel;
-
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class MenuWindow extends JFrame{
 
@@ -92,7 +87,7 @@ public class MenuWindow extends JFrame{
     private int promptBoardSize(String message) {
         int size = 0;
         while (size < 10 || size > 100) {
-            BoardSizeInputDialog dialog = new BoardSizeInputDialog(this, message);
+            InputDialog dialog = new InputDialog(this, message);
             dialog.setVisible(true);
             try {
                 size = dialog.getInputInt();

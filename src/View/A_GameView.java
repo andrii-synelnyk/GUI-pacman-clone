@@ -156,7 +156,7 @@ public class A_GameView {
         String nameForHighScore = "";
         while (nameForHighScore.isEmpty()) {
             try {
-                BoardSizeInputDialog dialog = new BoardSizeInputDialog(null, "Enter a name under which you want to be saved in high scores:");
+                InputDialog dialog = new InputDialog(null, "Enter a name under which you want to be saved in high scores:");
                 dialog.setVisible(true);
                 nameForHighScore = dialog.getInputString();
             } catch (NumberFormatException e) {

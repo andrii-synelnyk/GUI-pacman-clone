@@ -8,18 +8,20 @@ import Enum.CellContent;
 
 public class CustomTableCellRenderer extends DefaultTableCellRenderer {
 
-    private ImageIcon wallImage, playerImage, enemyImage, powerupImage, foodImage;
+    private ImageIcon wallImage, powerupImageSpeed, foodImage, powerupImageLife, powerupImageScore, powerupImageInvincibility, powerupImageFreeze;
 
     private PacmanView pacmanView;
     private EnemyView enemyView;
 
     public CustomTableCellRenderer(PacmanView pacmanView, EnemyView enemyView, int imageSize) {
         // Load and resize images
-        wallImage = resizeImageIcon(new ImageIcon("src/Images/wall-40.png"), imageSize, imageSize);
-        playerImage = resizeImageIcon(new ImageIcon("src/Images/player-40.png"), imageSize, imageSize);
-        enemyImage = resizeImageIcon(new ImageIcon("src/Images/enemy-40.png"), imageSize, imageSize);
-        powerupImage = resizeImageIcon(new ImageIcon("src/Images/powerup-40.png"), imageSize, imageSize);
-        foodImage = resizeImageIcon(new ImageIcon("src/Images/food-40.png"), imageSize, imageSize);
+        wallImage = resizeImageIcon(new ImageIcon("src/Images/wall.png"), imageSize, imageSize);
+        foodImage = resizeImageIcon(new ImageIcon("src/Images/food.png"), imageSize, imageSize);
+        powerupImageSpeed = resizeImageIcon(new ImageIcon("src/Images/powerup-speed.png"), imageSize, imageSize);
+        powerupImageLife = resizeImageIcon(new ImageIcon("src/Images/powerup-life.png"), imageSize, imageSize);
+        powerupImageScore = resizeImageIcon(new ImageIcon("src/Images/powerup-score.png"), imageSize, imageSize);
+        powerupImageInvincibility = resizeImageIcon(new ImageIcon("src/Images/powerup-invincibility.png"), imageSize, imageSize);
+        powerupImageFreeze = resizeImageIcon(new ImageIcon("src/Images/powerup-freeze.png"), imageSize, imageSize);
 
         this.pacmanView = pacmanView;
         this.enemyView = enemyView;
@@ -45,9 +47,6 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
         else if (value == CellContent.PLAYER){
             setIcon(pacmanView);
         }
-        else if (value == CellContent.POWER_UP){
-            setIcon(powerupImage);
-        }
         else if (value == CellContent.ENEMY){
             setIcon(enemyView);
         }
@@ -57,6 +56,21 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
         else if (value == CellContent.EMPTY){
             setIcon(null);
             setText(value.toString());
+        }
+        else if (value == CellContent.POWER_UP_SPEED_INCREASE){
+            setIcon(powerupImageSpeed);
+        }
+        else if (value == CellContent.POWER_UP_FREEZE_MONSTERS){
+            setIcon(powerupImageFreeze);
+        }
+        else if (value == CellContent.POWER_UP_EXTRA_LIFE){
+            setIcon(powerupImageLife);
+        }
+        else if (value == CellContent.POWER_UP_DOUBLE_SCORE){
+            setIcon(powerupImageScore);
+        }
+        else if (value == CellContent.POWER_UP_INVINCIBLE){
+            setIcon(powerupImageInvincibility);
         }
         else {
             setIcon(null);

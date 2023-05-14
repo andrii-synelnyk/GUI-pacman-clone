@@ -7,6 +7,7 @@ import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.concurrent.ThreadLocalRandom;
 
 import Enum.*;
 
@@ -32,6 +33,10 @@ public class A_GameModel {
     private int livesRemaining;
 
     private HighScoreList highScoreList;
+
+    // FOR POWER UPS
+    private double scoreMultiplier = 1;
+    private boolean invincible = false;
 
     public A_GameModel() {
         this.score = 0;
@@ -80,7 +85,7 @@ public class A_GameModel {
 
     public void moveCharacter(Character characterWhoCalled) {
         Thread moveCharacterThread = new Thread(() -> {
-            while (!gameOver) {
+            while (!gameOver && !characterWhoCalled.isFrozen()) {
 
                 if (characterWhoCalled.direction != null) {
                     Point newPosition = getNewPosition(characterWhoCalled);
@@ -130,20 +135,37 @@ public class A_GameModel {
         if (characterWhoCalled.getType() == CellContent.PLAYER) {
             gameBoard.getCharacterCell(characterWhoCalled).setEaten(); // remove sprite of object Pacman moved through
             if (newCellContent == CellContent.FOOD) { // If the cell pacman moved to is food, then increase score
-                increaseScoreBy(1);
-            }else if (newCellContent == CellContent.POWER_UP){ // Give Pacman higher speed for 7 sec
-                // Power up thread
-                useSpeedPowerUp();
+                increaseScore();
+            }else if (newCellContent == CellContent.POWER_UP_SPEED_INCREASE){ // Give Pacman higher speed for 7 sec
+                usePowerUp("speed");
+            }else if (newCellContent == CellContent.POWER_UP_DOUBLE_SCORE){
+                usePowerUp("score");
+            }else if (newCellContent == CellContent.POWER_UP_FREEZE_MONSTERS){
+                usePowerUp("freeze");
+            }else if (newCellContent == CellContent.POWER_UP_EXTRA_LIFE){
+                usePowerUp("extra-life"); // REPLACE ALL WITH SWITCH
+            }else if (newCellContent == CellContent.POWER_UP_INVINCIBLE){
+                usePowerUp("invincible"); // REPLACE ALL WITH SWITCH
             }
         } else {
-            gameBoard.getCharacterCell(characterWhoCalled).setContent(saveCellContent);
+            int ifToSpawnUpgrade = ThreadLocalRandom.current().nextInt(1, 100 + 1);
+            if (ifToSpawnUpgrade < 2) {
+                int whichUpgradeToSpawn = ThreadLocalRandom.current().nextInt(1, 5 + 1);
+                switch (whichUpgradeToSpawn) {
+                    case 1 -> gameBoard.placePowerUp((Enemy) characterWhoCalled, CellContent.POWER_UP_SPEED_INCREASE);
+                    case 2 -> gameBoard.placePowerUp((Enemy) characterWhoCalled, CellContent.POWER_UP_EXTRA_LIFE);
+                    case 3 -> gameBoard.placePowerUp((Enemy) characterWhoCalled, CellContent.POWER_UP_FREEZE_MONSTERS);
+                    case 4 -> gameBoard.placePowerUp((Enemy) characterWhoCalled, CellContent.POWER_UP_DOUBLE_SCORE);
+                    case 5 -> gameBoard.placePowerUp((Enemy) characterWhoCalled, CellContent.POWER_UP_INVINCIBLE);
+                }
+            } else gameBoard.getCharacterCell(characterWhoCalled).setContent(saveCellContent);
         }
 
         gameBoard.setCharacterCell(characterWhoCalled, newRow, newCol, characterWhoCalled.getType()); // Move character to next cell
     }
 
-    public void increaseScoreBy(int increaseFactor){
-        score += increaseFactor;
+    public void increaseScore(){
+        score += 1 * scoreMultiplier;
     }
 
     public int getScore(){
@@ -182,7 +204,7 @@ public class A_GameModel {
             }
         }
 
-        if (collisionDetected) {
+        if (collisionDetected && !invincible) {
             livesRemaining--;
             if (livesRemaining <= 0) gameOver = true; // Controller constantly monitors this flag
             else revivePacman();
@@ -203,9 +225,9 @@ public class A_GameModel {
 
     public ArrayList<Enemy> getEnemies(){ return enemies; }
 
-    public void useSpeedPowerUp(){
-        Thread powerUpThread = new Thread(() -> {
-            if (!gameOver) {
+    public void usePowerUp(String type){
+        if(type.equals("speed") && !gameOver){
+            Thread speedPowerUpThread = new Thread(() -> {
                 pacman.timeInterval = 150;
                 try {
                     Thread.sleep(7000);
@@ -213,10 +235,51 @@ public class A_GameModel {
                     e.printStackTrace();
                 }
                 pacman.timeInterval = 300;
-            }
-        });
-        powerUpThread.start();
-        modelThreads.add(powerUpThread);
+            });
+            speedPowerUpThread.start();
+            modelThreads.add(speedPowerUpThread);
+        }else if(type.equals("score") && !gameOver){
+            Thread scorePowerUpThread = new Thread(() -> {
+                scoreMultiplier = 2;
+                try {
+                    Thread.sleep(6000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+               scoreMultiplier = 1;
+            });
+            scorePowerUpThread.start();
+            modelThreads.add(scorePowerUpThread);
+        }else if(type.equals("extra-life") && !gameOver){
+            livesRemaining++;
+        }else if(type.equals("freeze") && !gameOver){
+            Thread freezePowerUpThread = new Thread(() -> {
+                enemies.forEach(e -> e.setFreezeStatus(true));
+                try {
+                    Thread.sleep(8000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                enemies.forEach(e -> {
+                    e.setFreezeStatus(false);
+                    moveCharacter(e);
+                });
+            });
+            freezePowerUpThread.start();
+            modelThreads.add(freezePowerUpThread);
+        }else if(type.equals("invincible") && !gameOver){
+            Thread invinciblePowerUpThread = new Thread(() -> {
+                invincible = true;
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                invincible = false;
+            });
+            invinciblePowerUpThread.start();
+            modelThreads.add(invinciblePowerUpThread);
+        }
     }
 
     public void stop(){
