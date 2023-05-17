@@ -74,6 +74,9 @@ public class A_GameModel {
         // Start moving characters
         characters.forEach(character -> {moveCharacter(character);});
 
+        // Start spawning power-ups by enemies
+        enemies.forEach(enemy -> {spawnPowerUps(enemy);});
+
         startTimer();
     }
 
@@ -143,17 +146,7 @@ public class A_GameModel {
                 case POWER_UP_INVINCIBLE -> usePowerUp("invincible");
             }
         } else {
-            int ifToSpawnUpgrade = ThreadLocalRandom.current().nextInt(1, 100 + 1);
-            if (ifToSpawnUpgrade < 2) {
-                int whichUpgradeToSpawn = ThreadLocalRandom.current().nextInt(1, 5 + 1);
-                switch (whichUpgradeToSpawn) {
-                    case 1 -> gameBoard.placePowerUp((Enemy) characterWhoCalled, CellContent.POWER_UP_SPEED_INCREASE);
-                    case 2 -> gameBoard.placePowerUp((Enemy) characterWhoCalled, CellContent.POWER_UP_EXTRA_LIFE);
-                    case 3 -> gameBoard.placePowerUp((Enemy) characterWhoCalled, CellContent.POWER_UP_FREEZE_MONSTERS);
-                    case 4 -> gameBoard.placePowerUp((Enemy) characterWhoCalled, CellContent.POWER_UP_DOUBLE_SCORE);
-                    case 5 -> gameBoard.placePowerUp((Enemy) characterWhoCalled, CellContent.POWER_UP_INVINCIBLE);
-                }
-            } else gameBoard.getCharacterCell(characterWhoCalled).setContent(saveCellContent);
+            gameBoard.getCharacterCell(characterWhoCalled).setContent(saveCellContent);
         }
 
         gameBoard.setCharacterCell(characterWhoCalled, newRow, newCol, characterWhoCalled.getType()); // Move character to next cell
@@ -220,6 +213,33 @@ public class A_GameModel {
 
     public ArrayList<Enemy> getEnemies(){ return enemies; }
 
+    public void spawnPowerUps(Enemy enemy){
+        Thread spawnPowerUpThread = new Thread(() -> {
+            while (!gameOver && !enemy.isFrozen()) {
+                int ifToSpawnUpgrade = ThreadLocalRandom.current().nextInt(1, 100 + 1);
+                if (ifToSpawnUpgrade <= 25) {
+                    int whichUpgradeToSpawn = ThreadLocalRandom.current().nextInt(1, 5 + 1);
+                    switch (whichUpgradeToSpawn) {
+                        case 1 -> gameBoard.placePowerUp(enemy, CellContent.POWER_UP_SPEED_INCREASE);
+                        case 2 -> gameBoard.placePowerUp(enemy, CellContent.POWER_UP_EXTRA_LIFE);
+                        case 3 -> gameBoard.placePowerUp(enemy, CellContent.POWER_UP_FREEZE_MONSTERS);
+                        case 4 -> gameBoard.placePowerUp(enemy, CellContent.POWER_UP_DOUBLE_SCORE);
+                        case 5 -> gameBoard.placePowerUp(enemy, CellContent.POWER_UP_INVINCIBLE);
+                    }
+                }
+
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            System.out.println("quit spawn power-up thread");
+        });
+        spawnPowerUpThread.start();
+        modelThreads.add(spawnPowerUpThread);
+    }
+
     public void usePowerUp(String type){
         if(type.equals("speed") && !gameOver){
             Thread speedPowerUpThread = new Thread(() -> {
@@ -258,6 +278,7 @@ public class A_GameModel {
                 enemies.forEach(e -> {
                     e.setFreezeStatus(false);
                     moveCharacter(e);
+                    spawnPowerUps(e);
                 });
             });
             freezePowerUpThread.start();

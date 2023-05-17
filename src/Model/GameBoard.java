@@ -220,7 +220,6 @@ public class GameBoard {
     }
 
     public void placePowerUp(Enemy enemyWhoCalled, CellContent powerUpType){
-        getCharacterCell(enemyWhoCalled).setContent(powerUpType);
         getCharacterCell(enemyWhoCalled).setContentUnderneath(powerUpType);
     }
 }
