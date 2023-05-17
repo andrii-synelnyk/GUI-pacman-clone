@@ -69,10 +69,10 @@ public class A_GameModel {
         System.out.println(eatableCellsRemaining);
 
         // Create and place enemies on the board
-        int numberOfEnemies = 3; // Set the desired number of enemies
+        int numberOfEnemies = 5; // Set the desired number of enemies
         for (int i = 0; i < numberOfEnemies; i++) {
             enemy = new Enemy(gameBoard);
-            GameBoard.Cell emptyCell = gameBoard.getRandomAvailableCell();
+            GameBoard.Cell emptyCell = gameBoard.getEmptyCellInTheMiddle();
             gameBoard.setCharacterCell(enemy, emptyCell.getRow(), emptyCell.getColumn(), enemy.getType());
             enemies.add(enemy);
             characters.add(enemy);

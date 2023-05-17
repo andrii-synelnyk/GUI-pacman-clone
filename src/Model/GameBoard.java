@@ -114,7 +114,7 @@ public class GameBoard {
             }
         }
 
-        // Place food instead of walls in the second row, row before the last, second column, and column before the last
+        // Make cells empty in the second row, row before the last, second column, and column before the last
         for (int row = 1; row < rows - 1; row++) {
             if (row == 1 || row == rows - 2) {
                 for (int col = 1; col < columns - 1; col++) {
@@ -180,23 +180,16 @@ public class GameBoard {
         return board[row][column];
     }
 
-    public Cell getRandomAvailableCell() {
-        List<Cell> emptyCells = new ArrayList<>();
+    public Cell getEmptyCellInTheMiddle(){
+        // Calculate the center of the board
+        int centerRow = rows / 2;
+        int centerCol = columns / 2;
 
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < columns; col++) {
-                if (board[row][col].getContent() == CellContent.FOOD) {
-                    emptyCells.add(board[row][col]);
-                }
-            }
+        // Set the content of the four cells that form a square in the middle of the board
+        if (board[centerRow][centerCol].getContent() != CellContent.WALL){
+            return board[centerRow][centerCol];
         }
-
-        if (!emptyCells.isEmpty()) {
-            int randomIndex = ThreadLocalRandom.current().nextInt(0, emptyCells.size());
-            return emptyCells.get(randomIndex);
-        } else {
-            throw new IllegalStateException("No empty cells available to place an enemy.");
-        }
+        return board[centerRow][centerCol - 1];
     }
 
     public int getRowCount(){
