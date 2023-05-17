@@ -77,7 +77,7 @@ public class A_GameModel {
         startTimer();
     }
 
-    // Add methods to manage game objects (player, enemies, power-ups, etc.)
+    // Add methods to manage game CellContents (player, enemies, power-ups, etc.)
 
     public GameBoard getGameBoard() {
         return gameBoard;
@@ -128,24 +128,19 @@ public class A_GameModel {
     }
 
     private void updateCharacterPosition(Character characterWhoCalled, int newRow, int newCol) {
-        Object saveCellContent = gameBoard.getCharacterCell(characterWhoCalled).getContentUnderneath();
-        Object newCellContent = gameBoard.getCell(newRow, newCol).getContent();
+        CellContent saveCellContent = gameBoard.getCharacterCell(characterWhoCalled).getContentUnderneath();
+        CellContent newCellContent = gameBoard.getCell(newRow, newCol).getContent();
 
         // Check for all types of collisions
         if (characterWhoCalled.getType() == CellContent.PLAYER) {
-            gameBoard.getCharacterCell(characterWhoCalled).setEaten(); // remove sprite of object Pacman moved through
-            if (newCellContent == CellContent.FOOD) { // If the cell pacman moved to is food, then increase score
-                increaseScore();
-            }else if (newCellContent == CellContent.POWER_UP_SPEED_INCREASE){ // Give Pacman higher speed for 7 sec
-                usePowerUp("speed");
-            }else if (newCellContent == CellContent.POWER_UP_DOUBLE_SCORE){
-                usePowerUp("score");
-            }else if (newCellContent == CellContent.POWER_UP_FREEZE_MONSTERS){
-                usePowerUp("freeze");
-            }else if (newCellContent == CellContent.POWER_UP_EXTRA_LIFE){
-                usePowerUp("extra-life"); // REPLACE ALL WITH SWITCH
-            }else if (newCellContent == CellContent.POWER_UP_INVINCIBLE){
-                usePowerUp("invincible"); // REPLACE ALL WITH SWITCH
+            gameBoard.getCharacterCell(characterWhoCalled).setEaten(); // remove sprite of CellContent Pacman moved through
+            switch (newCellContent) {
+                case FOOD -> increaseScore();
+                case POWER_UP_SPEED_INCREASE -> usePowerUp("speed");
+                case POWER_UP_DOUBLE_SCORE -> usePowerUp("score");
+                case POWER_UP_FREEZE_MONSTERS -> usePowerUp("freeze");
+                case POWER_UP_EXTRA_LIFE -> usePowerUp("extra-life");
+                case POWER_UP_INVINCIBLE -> usePowerUp("invincible");
             }
         } else {
             int ifToSpawnUpgrade = ThreadLocalRandom.current().nextInt(1, 100 + 1);

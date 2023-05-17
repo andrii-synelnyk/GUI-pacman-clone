@@ -21,21 +21,21 @@ public class GameBoard {
     public class Cell {
         private int row;
         private int column;
-        private Object content;
-        private Object contentUnderneath;
+        private CellContent content;
+        private CellContent contentUnderneath;
 
-        public Cell(int row, int column, Object content) {
+        public Cell(int row, int column, CellContent content) {
             this.row = row;
             this.column = column;
             this.content = content;
             this.contentUnderneath = content;
         }
 
-        public Object getContent() {
+        public CellContent getContent() {
             return content;
         }
 
-        public void setContent(Object content) {
+        public void setContent(CellContent content) {
             this.content = content;
         }
 
@@ -53,11 +53,11 @@ public class GameBoard {
             return column;
         }
 
-        public Object getContentUnderneath(){
+        public CellContent getContentUnderneath(){
             return contentUnderneath;
         }
 
-        public void setContentUnderneath(Object contentUnderneath){
+        public void setContentUnderneath(CellContent contentUnderneath){
             this.contentUnderneath = contentUnderneath;
         }
     }
@@ -219,7 +219,7 @@ public class GameBoard {
         this.board = new Cell[rows][columns];
     }
 
-    public void placePowerUp(Enemy enemyWhoCalled, Object powerUpType){
+    public void placePowerUp(Enemy enemyWhoCalled, CellContent powerUpType){
         getCharacterCell(enemyWhoCalled).setContent(powerUpType);
         getCharacterCell(enemyWhoCalled).setContentUnderneath(powerUpType);
     }

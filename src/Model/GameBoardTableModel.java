@@ -1,6 +1,7 @@
 package Model;
 
 import javax.swing.table.AbstractTableModel;
+import Enum.CellContent;
 
 public class GameBoardTableModel extends AbstractTableModel {
     private GameBoard gameBoard;
@@ -20,7 +21,7 @@ public class GameBoardTableModel extends AbstractTableModel {
     }
 
     @Override
-    public Object getValueAt(int rowIndex, int columnIndex) {
+    public CellContent getValueAt(int rowIndex, int columnIndex) {
         return gameBoard.getCell(rowIndex, columnIndex).getContent();
     }
 
