@@ -43,7 +43,7 @@ public class A_GameModel {
 
     public A_GameModel() {
         this.score = 0;
-        this.livesRemaining = 1;
+        this.livesRemaining = 2;
         enemies = new ArrayList<>();
         characters = new HashSet<>();
     }
@@ -109,7 +109,7 @@ public class A_GameModel {
                     }
                 }
 
-                if (characterWhoCalled.getType() == CellContent.PLAYER) checkForDeathOrGameOver(); // Check for game over after updating the character position
+                checkForDeathOrGameOver(); // Check for game over after updating the character position
 
                 try {
                     Thread.sleep(characterWhoCalled.timeInterval); // Wait till the next move
@@ -209,7 +209,10 @@ public class A_GameModel {
         if (collisionDetected && !invincible) {
             livesRemaining--;
             if (livesRemaining <= 0) gameOver = true; // Controller constantly monitors this flag
-            else revivePacman();
+            else {
+                resetEnemies();
+                revivePacman();
+            }
         }
     }
 
@@ -346,8 +349,15 @@ public class A_GameModel {
     }
 
     public void revivePacman(){
-        gameBoard.getCharacterCell(pacman).setContent(CellContent.ENEMY);
         gameBoard.setCharacterCell(pacman, 1, 1, pacman.getType());
+    }
+
+    public void resetEnemies(){
+        for (Enemy enemy : enemies){
+            gameBoard.getCharacterCell(enemy).setContent(gameBoard.getCharacterCell(enemy).getContentUnderneath());
+            GameBoard.Cell emptyCell = gameBoard.getEmptyCellInTheMiddle();
+            gameBoard.setCharacterCell(enemy, emptyCell.getRow(), emptyCell.getColumn(), enemy.getType());
+        }
     }
 
     public int getLivesRemaining(){
