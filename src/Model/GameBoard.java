@@ -14,8 +14,7 @@ public class GameBoard {
 
     private HashMap<Character, Cell> characterCells;
 
-    // DEBUG
-    public HashSet<Cell> foods = new HashSet<>();
+    public int eatableCellsNumber;
 
     // Inner class representing a cell in the game board
     public class Cell {
@@ -115,41 +114,36 @@ public class GameBoard {
             }
         }
 
-        // Place food on empty cells
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < columns; col++) {
-                if (board[row][col].getContent() == CellContent.EMPTY) {
-                    board[row][col] = new Cell(row, col, CellContent.FOOD);
-                    foods.add(board[row][col]);
-                }
-            }
-        }
-
-        System.out.println(foods.size());
-
-        // Make all cells empty in the second row, row before the last, second column, and column before the last
+        // Place food instead of walls in the second row, row before the last, second column, and column before the last
         for (int row = 1; row < rows - 1; row++) {
             if (row == 1 || row == rows - 2) {
                 for (int col = 1; col < columns - 1; col++) {
-                    board[row][col] = new Cell(row, col, CellContent.FOOD);
+                    board[row][col] = new Cell(row, col, CellContent.EMPTY);
                 }
             } else {
-                board[row][1] = new Cell(row, 1, CellContent.FOOD);
-                board[row][columns - 2] = new Cell(row, columns - 2, CellContent.FOOD);
+                board[row][1] = new Cell(row, 1, CellContent.EMPTY);
+                board[row][columns - 2] = new Cell(row, columns - 2, CellContent.EMPTY);
             }
         }
 
         removeDeadEnds();
 
-        // Place power-ups (use a loop to place multiple power-ups)
-        //board[1][columns - 7] = new Cell(1, columns - 7, CellContent.POWER_UP_INVINCIBLE);
+        // Place food on cells that are empty
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < columns; col++) {
+                if (board[row][col].getContent() == CellContent.EMPTY) {
+                    board[row][col] = new Cell(row, col, CellContent.FOOD);
+                }
+            }
+        }
+
     }
 
     public void removeDeadEnds(){
         int[][] directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
             for (int row = 1; row < rows - 1; row++) {
                 for (int col = 1; col < columns - 1; col++) {
-                    if (board[row][col].getContent() == CellContent.FOOD) {
+                    if (board[row][col].getContent() == CellContent.EMPTY) {
                         int wallCount = 0;
                         ArrayList<Cell> wallCellsAround = new ArrayList<>();
 
@@ -166,7 +160,7 @@ public class GameBoard {
                         if (wallCount == 3) {
                             int indexOfCellToChange = ThreadLocalRandom.current().nextInt(0, wallCellsAround.size());
                             Cell cellToChange = wallCellsAround.get(indexOfCellToChange);
-                            board[cellToChange.getRow()][cellToChange.getColumn()] = new Cell(cellToChange.getRow(), cellToChange.getColumn(), CellContent.FOOD);
+                            board[cellToChange.getRow()][cellToChange.getColumn()] = new Cell(cellToChange.getRow(), cellToChange.getColumn(), CellContent.EMPTY);
                         }
                     }
                 }
@@ -221,5 +215,15 @@ public class GameBoard {
 
     public void placePowerUp(Enemy enemyWhoCalled, CellContent powerUpType){
         getCharacterCell(enemyWhoCalled).setContentUnderneath(powerUpType);
+    }
+
+    public int getEatableCellsCount(){
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < columns; col++) {
+                if (board[row][col].getContent() == CellContent.FOOD) {
+                    eatableCellsNumber++;
+                }
+            }
+        } return eatableCellsNumber;
     }
 }

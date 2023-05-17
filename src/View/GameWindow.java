@@ -100,8 +100,8 @@ public class GameWindow extends JFrame {
         livesLabel.setFont(new Font("Arial", Font.BOLD, fontSize));
         scoreLabel.setFont(new Font("Arial", Font.BOLD, fontSize));
         timeLabel.setFont(new Font("Arial", Font.BOLD, fontSize));
-        System.out.println(timeScorePanel.getWidth());
-        System.out.println(gameTable.getWidth());
+        //System.out.println(timeScorePanel.getWidth());
+        //System.out.println(gameTable.getWidth());
     }
 
     public int getHeightOfTopPanel(){

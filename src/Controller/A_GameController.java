@@ -112,7 +112,7 @@ public class A_GameController {
         controllerThreads.add(redrawThread);
     }
 
-    public void changePacmanDirection(){
+    public void changePacmanDirection(){ // when the key is pressed
         Thread changePacmanDirectionThread = new Thread(() -> {
             while (!gameModel.getGameOver()) {
                 try {
