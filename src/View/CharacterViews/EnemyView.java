@@ -1,4 +1,6 @@
-package View;
+package View.CharacterViews;
+
+import View.CharacterViews.CharacterView;
 
 import java.awt.*;
 

@@ -1,4 +1,4 @@
-package View;
+package View.ProgramWindows;
 
 import javax.swing.*;
 import java.awt.*;

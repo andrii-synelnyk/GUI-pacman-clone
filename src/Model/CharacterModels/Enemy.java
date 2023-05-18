@@ -1,4 +1,4 @@
-package Model;
+package Model.CharacterModels;
 
 import Enum.Direction;
 import Enum.CellContent;
@@ -6,9 +6,11 @@ import Enum.CellContent;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
-import Model.GameBoard.Cell;
+import Model.Character;
+import Model.GameBoardLogic.GameBoard;
+import Model.GameBoardLogic.GameBoard.Cell;
 
-public class Enemy extends Character{
+public class Enemy extends Character {
 
     Thread changeDirectionThread;
     public Enemy(GameBoard gameBoard) {

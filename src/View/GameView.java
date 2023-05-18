@@ -2,13 +2,19 @@ package View;
 
 import javax.swing.*;
 import Enum.Direction;
+import View.CharacterViews.EnemyView;
+import View.CharacterViews.PacmanView;
+import View.ProgramWindows.GameWindow;
+import View.ProgramWindows.HighScoresWindow;
+import View.ProgramWindows.InputDialog;
+import View.ProgramWindows.MenuWindow;
 
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.Map;
 
-public class A_GameView {
+public class GameView {
 
     GameWindow gameWindow;
     MenuWindow menu;
@@ -19,7 +25,7 @@ public class A_GameView {
     private int numberOfColumns;
     private double aspectRatio;
 
-    public A_GameView() {
+    public GameView() {
         menu = new MenuWindow();
     }
 

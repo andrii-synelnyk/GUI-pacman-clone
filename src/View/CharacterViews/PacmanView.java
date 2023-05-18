@@ -1,7 +1,8 @@
-package View;
+package View.CharacterViews;
 
 import java.awt.*;
 import Enum.Direction;
+import View.CharacterViews.CharacterView;
 
 public class PacmanView extends CharacterView {
 

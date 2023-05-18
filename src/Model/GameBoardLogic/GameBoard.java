@@ -1,6 +1,8 @@
-package Model;
+package Model.GameBoardLogic;
 
 import Enum.CellContent;
+import Model.Character;
+import Model.CharacterModels.Enemy;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;

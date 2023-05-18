@@ -5,6 +5,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 
 import Enum.CellContent;
+import View.CharacterViews.EnemyView;
+import View.CharacterViews.PacmanView;
 
 public class CustomTableCellRenderer extends DefaultTableCellRenderer {
 

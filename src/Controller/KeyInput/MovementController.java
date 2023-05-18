@@ -1,14 +1,15 @@
-package Controller;
+package Controller.KeyInput;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import Controller.GameController;
 import Enum.Direction;
 
 public class MovementController implements KeyListener {
-    private final A_GameController gameController;
+    private final GameController gameController;
 
-    public MovementController(A_GameController gameController) {
+    public MovementController(GameController gameController) {
         this.gameController = gameController;
     }
 

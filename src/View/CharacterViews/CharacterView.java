@@ -1,4 +1,4 @@
-package View;
+package View.CharacterViews;
 
 import javax.swing.*;
 import java.awt.*;

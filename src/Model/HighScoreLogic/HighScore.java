@@ -1,4 +1,4 @@
-package Model;
+package Model.HighScoreLogic;
 
 import java.io.Serializable;
 

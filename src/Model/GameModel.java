@@ -9,8 +9,13 @@ import java.util.HashSet;
 import java.util.concurrent.ThreadLocalRandom;
 
 import Enum.*;
+import Model.CharacterModels.Enemy;
+import Model.CharacterModels.Pacman;
+import Model.GameBoardLogic.GameBoard;
+import Model.GameBoardLogic.GameBoardTableModel;
+import Model.HighScoreLogic.HighScoreList;
 
-public class A_GameModel {
+public class GameModel {
     private GameBoard gameBoard;
     private GameBoardTableModel gameBoardTableModel;
     private JTable gameTable;
@@ -42,7 +47,7 @@ public class A_GameModel {
 
     private HashSet<Thread> threadsForInterruption = new HashSet<>(); // threads which should be interrupted when game ends, not to (exist/cause bugs) in the next game
 
-    public A_GameModel() {
+    public GameModel() {
         this.score = 0;
         this.livesRemaining = 2;
         enemies = new ArrayList<>();

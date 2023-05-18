@@ -1,22 +1,24 @@
 package Controller;
 
-import Model.A_GameModel;
-import Model.HighScore;
-import Model.HighScoreList;
-import View.A_GameView;
+import Controller.KeyInput.CompoundShortcutController;
+import Controller.KeyInput.MovementController;
+import Model.GameModel;
+import Model.HighScoreLogic.HighScore;
+import Model.HighScoreLogic.HighScoreList;
+import View.GameView;
 
 import javax.swing.*;
 
 import Enum.*;
-import View.MenuWindow;
+import View.ProgramWindows.MenuWindow;
 
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class A_GameController {
-    private final A_GameModel gameModel;
-    private final A_GameView gameView;
+public class GameController {
+    private final GameModel gameModel;
+    private final GameView gameView;
 
     private HashSet<Thread> controllerThreads = new HashSet<>();
 
@@ -25,7 +27,7 @@ public class A_GameController {
 
     private boolean needToAskForHighscoreInput = true;
 
-    public A_GameController(A_GameModel gameModel, A_GameView gameView) {
+    public GameController(GameModel gameModel, GameView gameView) {
         this.gameModel = gameModel;
         this.gameView = gameView;
 

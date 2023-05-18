@@ -1,4 +1,4 @@
-package View;
+package View.ProgramWindows;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

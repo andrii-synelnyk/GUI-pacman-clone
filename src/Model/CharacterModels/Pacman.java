@@ -1,8 +1,10 @@
-package Model;
+package Model.CharacterModels;
 
 import Enum.CellContent;
+import Model.Character;
+import Model.GameBoardLogic.GameBoard;
 
-public class Pacman extends Character{
+public class Pacman extends Character {
 
     public Pacman(GameBoard gameBoard) {
 

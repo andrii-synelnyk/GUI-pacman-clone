@@ -1,13 +1,15 @@
-package Controller;
+package Controller.KeyInput;
+
+import Controller.GameController;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class CompoundShortcutController implements KeyListener {
 
-    private final A_GameController gameController;
+    private final GameController gameController;
 
-    public CompoundShortcutController(A_GameController gameController) {
+    public CompoundShortcutController(GameController gameController) {
         this.gameController = gameController;
     }
 

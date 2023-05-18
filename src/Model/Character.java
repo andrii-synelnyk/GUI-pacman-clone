@@ -2,6 +2,7 @@ package Model;
 
 import Enum.CellContent;
 import Enum.Direction;
+import Model.GameBoardLogic.GameBoard;
 
 public abstract class Character {
     protected boolean isRunning = true;
