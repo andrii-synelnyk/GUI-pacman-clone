@@ -57,8 +57,4 @@ public class Enemy extends Character{
     public CellContent getType(){
         return CellContent.ENEMY;
     }
-
-    public Thread getChangeDirectionThread(){
-        return changeDirectionThread;
-    }
 }

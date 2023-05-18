@@ -40,7 +40,6 @@ public class A_GameController {
             while (gameView.getMenuWindow().isVisible()) {
                 try {
                     Thread.sleep(15);
-                    //System.out.println("menuListener");
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -62,7 +61,6 @@ public class A_GameController {
             }
         });
         menuListener.start();
-        //controllerThreads.add(menuListener);
     }
 
     public void startNewGame(int rowsInput, int columnsInput){
@@ -131,10 +129,9 @@ public class A_GameController {
 
     public void checkForGameOver(){
         Thread checkForGameOverThread = new Thread(() -> {
-            while (!gameModel.getGameOver()) { // CHANGE !!!
+            while (!gameModel.getGameOver()) {
                 try {
                     Thread.sleep(15);
-                    //System.out.println(Thread.currentThread().getName());
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

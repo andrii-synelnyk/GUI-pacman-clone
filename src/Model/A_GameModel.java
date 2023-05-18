@@ -67,7 +67,6 @@ public class A_GameModel {
 
         // Get number of remaining cells with food
         eatableCellsRemaining = gameBoard.getEatableCellsCount();
-        //System.out.println(eatableCellsRemaining);
 
         // Create and place enemies on the board
         int numberOfEnemies = calcNumberOfEnemies(rows, columns); // Set the desired number of enemies
@@ -167,7 +166,6 @@ public class A_GameModel {
 
     public void clearedCell(){
         eatableCellsRemaining--;
-        //System.out.println(eatableCellsRemaining);
         if (eatableCellsRemaining == 0) gameOver = true;
     }
 
@@ -328,7 +326,7 @@ public class A_GameModel {
         // Stop all running threads
 //        for (Thread thread : modelThreads){
 //            try{
-//                thread.interrupt();
+//                thread.join();
 //            }catch (Exception e){
 //                e.printStackTrace();
 //            }

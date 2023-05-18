@@ -37,7 +37,6 @@ public class A_GameView {
             public void componentResized(ComponentEvent e) {
                 keepAspectRatio();
                 resizeContents(gameBoard);
-                //System.out.println("resized");
             }
         });
         setFontSize();
@@ -114,11 +113,6 @@ public class A_GameView {
         gameTable.setBackground(Color.BLACK);
         gameTable.setCellSelectionEnabled(false); // Disable ability to select cells
 
-        // Set the preferred size of the gameTable directly
-//        Dimension tableSize = new Dimension(
-//                gameTable.getColumnCount() * imageSize,
-//                gameTable.getRowCount() * imageSize);
-//        gameTable.setSize(tableSize);
         // Set up the custom cell renderer
         CustomTableCellRenderer cellRenderer = new CustomTableCellRenderer(pacmanView, enemyView, imageSize);
         gameTable.setDefaultRenderer(Object.class, cellRenderer);

@@ -1,15 +1,11 @@
 package View;
 
-import Model.Pacman;
-
-import javax.swing.*;
 import java.awt.*;
 import Enum.Direction;
 
 public class PacmanView extends CharacterView {
 
-
-    private int mouthOpened = 0;
+    private int mouthDegree = 0;
     private boolean mouthFullyOpened = true;
 
     Direction pacmanDirection = Direction.UP;
@@ -22,12 +18,12 @@ public class PacmanView extends CharacterView {
         pacmanViewThread = new Thread(() -> {
             while (isRunning) {
                 try {
-                    Thread.sleep(15);
+                    Thread.sleep(7);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                mouthOpened += mouthFullyOpened ? 10 : -10;
-                if (mouthOpened == 120 || mouthOpened == 0) {
+                mouthDegree += mouthFullyOpened ? 5 : -5;
+                if (mouthDegree == 0 || mouthDegree == 120) {
                     mouthFullyOpened = !mouthFullyOpened;
                 }
             }
@@ -38,7 +34,7 @@ public class PacmanView extends CharacterView {
 
     public void paintIcon(Component c, Graphics g, int x, int y) {
         g.setColor(Color.YELLOW);
-        g.fillArc(x, y, width, height, mouthOpened / 2 + pacmanDirection.getDirectionMultiplier(), 360 - mouthOpened);
+        g.fillArc(x, y, width, height, mouthDegree / 2 + pacmanDirection.getDirectionMultiplier(), 360 - mouthDegree);
     }
 
     public void setPacmanDirection(Direction pacmanDirection){

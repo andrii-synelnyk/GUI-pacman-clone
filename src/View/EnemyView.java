@@ -1,8 +1,5 @@
 package View;
 
-import Model.Enemy;
-
-import javax.swing.*;
 import java.awt.*;
 
 public class EnemyView extends CharacterView {

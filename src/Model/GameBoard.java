@@ -1,7 +1,5 @@
 package Model;
 
-import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
 import Enum.CellContent;
 
 import java.util.*;
@@ -67,8 +65,6 @@ public class GameBoard {
         this.board = new Cell[rows][columns];
 
         characterCells = new HashMap<>();
-
-        //table.setFocusable(false);
 
         initBoard();
     }

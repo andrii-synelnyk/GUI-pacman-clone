@@ -55,7 +55,7 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
         }
         else if (value == CellContent.EMPTY){
             setIcon(null);
-            setText(value.toString());
+            //setText(value.toString());
         }
         else if (value == CellContent.POWER_UP_SPEED_INCREASE){
             setIcon(powerupImageSpeed);
@@ -74,9 +74,9 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
         }
         else {
             setIcon(null);
-            setText(value.toString()); // Use the default text display
+            //setText(value.toString()); // Use the default text display
         }
-        setText(""); // Clear the text
+        //setText(""); // Clear the text
 
         setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 
