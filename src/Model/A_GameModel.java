@@ -2,7 +2,6 @@ package Model;
 
 
 import javax.swing.*;
-import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
@@ -41,6 +40,8 @@ public class A_GameModel {
 
     private int eatableCellsRemaining;
 
+    private HashSet<Thread> threadsForInterruption = new HashSet<>(); // threads which should be interrupted when game ends, not to (exist/cause bugs) in the next game
+
     public A_GameModel() {
         this.score = 0;
         this.livesRemaining = 2;
@@ -66,7 +67,7 @@ public class A_GameModel {
 
         // Get number of remaining cells with food
         eatableCellsRemaining = gameBoard.getEatableCellsCount();
-        System.out.println(eatableCellsRemaining);
+        //System.out.println(eatableCellsRemaining);
 
         // Create and place enemies on the board
         int numberOfEnemies = 5; // Set the desired number of enemies
@@ -166,7 +167,7 @@ public class A_GameModel {
 
     public void clearedCell(){
         eatableCellsRemaining--;
-        System.out.println(eatableCellsRemaining);
+        //System.out.println(eatableCellsRemaining);
         if (eatableCellsRemaining == 0) gameOver = true;
     }
 
@@ -232,114 +233,134 @@ public class A_GameModel {
 
     public void spawnPowerUps(Enemy enemy){
         Thread spawnPowerUpThread = new Thread(() -> {
-            while (!gameOver && !enemy.isFrozen()) {
-                try {
+            try {
+                while (!gameOver) { // this thread is interrupted when the game stops,
+                    // because if I quickly end and start game again within 5 secs of this thread's sleep, so gameOver bool will be true when this thread wakes from sleep
+                    // it will still think that the game is running and try to find cell for an enemy that does not exist anymore
+                    // So I interrupt it if it's sleeping when the game ends, for it not to wake at all
                     Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
 
-                int ifToSpawnUpgrade = ThreadLocalRandom.current().nextInt(1, 100 + 1);
-                if (ifToSpawnUpgrade <= 25 && gameBoard.getCharacterCell(enemy).getContentUnderneath() == CellContent.FOOD) {
-                    int whichUpgradeToSpawn = ThreadLocalRandom.current().nextInt(1, 5 + 1);
-                    switch (whichUpgradeToSpawn) {
-                        case 1 -> gameBoard.placePowerUp(enemy, CellContent.POWER_UP_SPEED_INCREASE);
-                        case 2 -> gameBoard.placePowerUp(enemy, CellContent.POWER_UP_EXTRA_LIFE);
-                        case 3 -> gameBoard.placePowerUp(enemy, CellContent.POWER_UP_FREEZE_MONSTERS);
-                        case 4 -> gameBoard.placePowerUp(enemy, CellContent.POWER_UP_DOUBLE_SCORE);
-                        case 5 -> gameBoard.placePowerUp(enemy, CellContent.POWER_UP_INVINCIBLE);
+                    int ifToSpawnUpgrade = ThreadLocalRandom.current().nextInt(1, 100 + 1);
+                    if (ifToSpawnUpgrade <= 25 && gameBoard.getCharacterCell(enemy).getContentUnderneath() == CellContent.FOOD) {
+                        int whichUpgradeToSpawn = ThreadLocalRandom.current().nextInt(1, 5 + 1);
+                        switch (whichUpgradeToSpawn) {
+                            case 1 -> gameBoard.placePowerUp(enemy, CellContent.POWER_UP_SPEED_INCREASE);
+                            case 2 -> gameBoard.placePowerUp(enemy, CellContent.POWER_UP_EXTRA_LIFE);
+                            case 3 -> gameBoard.placePowerUp(enemy, CellContent.POWER_UP_FREEZE_MONSTERS);
+                            case 4 -> gameBoard.placePowerUp(enemy, CellContent.POWER_UP_DOUBLE_SCORE);
+                            case 5 -> gameBoard.placePowerUp(enemy, CellContent.POWER_UP_INVINCIBLE);
+                        }
                     }
                 }
+            }catch (InterruptedException e) {
+                System.out.println("Power-up spawning thread was interrupted and will now end.");
             }
-            System.out.println("quit spawn power-up thread");
         });
         spawnPowerUpThread.start();
+        threadsForInterruption.add(spawnPowerUpThread);
         modelThreads.add(spawnPowerUpThread);
     }
+
 
     public void usePowerUp(String type){
         if(type.equals("speed") && !gameOver){
             Thread speedPowerUpThread = new Thread(() -> {
-                pacman.timeInterval = 150;
                 try {
+                    pacman.timeInterval = 150;
                     Thread.sleep(7000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    pacman.timeInterval = 300;
+                }catch (InterruptedException e) {
+                    System.out.println("Speed power-up thread was interrupted and will now end.");
                 }
-                pacman.timeInterval = 300;
             });
             speedPowerUpThread.start();
+            threadsForInterruption.add(speedPowerUpThread);
             modelThreads.add(speedPowerUpThread);
         }else if(type.equals("score") && !gameOver){
             Thread scorePowerUpThread = new Thread(() -> {
-                scoreMultiplier = 2;
                 try {
+                    scoreMultiplier = 2;
                     Thread.sleep(6000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    scoreMultiplier = 1;
+                }catch (InterruptedException e) {
+                    System.out.println("Score power-up thread was interrupted and will now end.");
                 }
-               scoreMultiplier = 1;
             });
             scorePowerUpThread.start();
+            threadsForInterruption.add(scorePowerUpThread);
             modelThreads.add(scorePowerUpThread);
         }else if(type.equals("extra-life") && !gameOver){
             livesRemaining++;
         }else if(type.equals("freeze") && !gameOver){
             Thread freezePowerUpThread = new Thread(() -> {
-                enemies.forEach(e -> e.setFreezeStatus(true));
                 try {
+                    enemies.forEach(e -> e.setFreezeStatus(true));
                     Thread.sleep(8000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    enemies.forEach(e -> {
+                        e.setFreezeStatus(false);
+                        moveCharacter(e);
+                        spawnPowerUps(e);
+                    });
+                }catch (InterruptedException e) {
+                    System.out.println("Freeze power-up thread was interrupted and will now end.");
                 }
-                enemies.forEach(e -> {
-                    e.setFreezeStatus(false);
-                    moveCharacter(e);
-                    spawnPowerUps(e);
-                });
             });
             freezePowerUpThread.start();
+            threadsForInterruption.add(freezePowerUpThread);
             modelThreads.add(freezePowerUpThread);
         }else if(type.equals("invincible") && !gameOver){
             Thread invinciblePowerUpThread = new Thread(() -> {
-                invincible = true;
                 try {
+                    invincible = true;
                     Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    invincible = false;
+                }catch (InterruptedException e) {
+                    System.out.println("Invincibility power-up thread was interrupted and will now end.");
                 }
-                invincible = false;
             });
             invinciblePowerUpThread.start();
+            threadsForInterruption.add(invinciblePowerUpThread);
             modelThreads.add(invinciblePowerUpThread);
         }
     }
 
     public void stop(){
-        this.score = 0;
-        this.time = 0;
-        this.livesRemaining = 1;
-        this.characters.clear();
-        // Join threads in Model class (moving characters, power-ups activations)
-//        for (Thread t : modelThreads){
+        // Stop all running threads
+//        for (Thread thread : modelThreads){
 //            try{
-//                t.join();
-//            }catch (InterruptedException e){
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        // Join threads in Enemy class (choosing new direction)
-        for (Enemy enemy : enemies) {
-            enemy.setIsRunning(false);
-//            try {
-//                enemy.getChangeDirectionThread().join();
+//                thread.interrupt();
 //            }catch (Exception e){
 //                e.printStackTrace();
 //            }
+//        }
+
+        for (Thread t : threadsForInterruption) {
+            t.interrupt();
         }
+        threadsForInterruption.clear();
+
+        // Nullify and reset all objects and variables to their initial state
+        this.score = 0;
+        this.time = 0;
+        this.livesRemaining = 2;
+        this.scoreMultiplier = 1;
+        this.invincible = false;
+        this.eatableCellsRemaining = 0;
+
         this.enemies.clear();
+        this.characters.clear();
         this.modelThreads.clear();
+
+        for (Enemy enemy : enemies) {
+            enemy.setIsRunning(false);
+        }
+
+        this.gameBoard = null;
+        this.gameBoardTableModel = null;
+        this.gameTable = null;
+        this.pacman = null;
+        this.enemy = null;
+        this.highScoreList = null;
 
         System.out.println("stopped model");
     }
