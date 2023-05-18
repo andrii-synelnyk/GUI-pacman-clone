@@ -188,8 +188,11 @@ public class GameBoard {
         // Set the content of the four cells that form a square in the middle of the board
         if (board[centerRow][centerCol].getContent() != CellContent.WALL){
             return board[centerRow][centerCol];
-        }
-        return board[centerRow][centerCol - 1];
+        } else if (board[centerRow - 1][centerCol].getContent() != CellContent.WALL){
+            return board[centerRow - 1][centerCol];
+        } else if (board[centerRow][centerCol - 1].getContent() != CellContent.WALL){
+            return board[centerRow][centerCol - 1];
+        } return board[centerRow - 1][centerCol - 1];
     }
 
     public int getRowCount(){

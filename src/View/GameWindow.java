@@ -4,6 +4,8 @@ import Controller.A_GameController;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 
 public class GameWindow extends JFrame {
     private JTable gameTable;
@@ -13,6 +15,8 @@ public class GameWindow extends JFrame {
     private JLabel livesLabel;
 
     private JPanel timeScorePanel;
+
+    private Font customFont;
 
     public GameWindow(JTable gameBoard) {
         setTitle("Pacman Game");
@@ -28,6 +32,12 @@ public class GameWindow extends JFrame {
         getContentPane().add(timeScorePanel, BorderLayout.NORTH);
         timeScorePanel.setBackground(Color.BLACK);
 
+        // Import custom font
+        try {
+            customFont = Font.createFont(Font.TRUETYPE_FONT, new File("src/Font/emulogic.ttf")).deriveFont(20f);
+        } catch (IOException | FontFormatException e) {
+            e.printStackTrace();
+        }
 
         pack();
         System.out.println("packed");
@@ -50,13 +60,13 @@ public class GameWindow extends JFrame {
         scoreLabel = new JLabel("Score: 0");
         timeLabel = new JLabel("Time: 00:00");
 
-        livesLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        livesLabel.setFont(customFont);
         livesLabel.setForeground(Color.WHITE);
 
-        scoreLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        scoreLabel.setFont(customFont);
         scoreLabel.setForeground(Color.WHITE);
 
-        timeLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        timeLabel.setFont(customFont);
         timeLabel.setForeground(Color.WHITE);
 
         timeScorePanel = new JPanel();
@@ -96,12 +106,11 @@ public class GameWindow extends JFrame {
         livesLabel.setText("Lives: " + lives);
     }
 
-    public void setFontSize(int fontSize){
-        livesLabel.setFont(new Font("Arial", Font.BOLD, fontSize));
-        scoreLabel.setFont(new Font("Arial", Font.BOLD, fontSize));
-        timeLabel.setFont(new Font("Arial", Font.BOLD, fontSize));
-        //System.out.println(timeScorePanel.getWidth());
-        //System.out.println(gameTable.getWidth());
+    public void setFontSize(float fontSize){
+        Font resizedFont = customFont.deriveFont(fontSize);
+        livesLabel.setFont(resizedFont);
+        scoreLabel.setFont(resizedFont);
+        timeLabel.setFont(resizedFont);
     }
 
     public int getHeightOfTopPanel(){

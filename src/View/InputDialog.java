@@ -4,12 +4,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.IOException;
 
 public class InputDialog extends JDialog {
     private JTextField inputField;
     private boolean isCanceled;
 
     private String dialogTitle;
+
+    private Font customFont;
 
     public InputDialog(JFrame parent, String title) {
         super(parent, title, true);
@@ -23,6 +27,16 @@ public class InputDialog extends JDialog {
         });
 
         initComponents();
+
+        // Import custom font
+        try {
+            customFont = Font.createFont(Font.TRUETYPE_FONT, new File("src/Font/emulogic.ttf")).deriveFont(9f);
+        } catch (IOException | FontFormatException e) {
+            e.printStackTrace();
+        }
+        setFontForAllComponents(this, customFont);
+        pack();
+        setLocationRelativeTo(null);
     }
 
     private void initComponents() {
@@ -51,27 +65,16 @@ public class InputDialog extends JDialog {
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
         JButton okButton = new JButton("OK");
-//        okButton.setBackground(Color.YELLOW);
-//        okButton.setForeground(Color.BLACK);
-//        okButton.setOpaque(true);
-//        okButton.setBorderPainted(false);
         okButton.addActionListener(e -> handleOkButtonClick());
         buttonPanel.add(okButton);
 
         JButton cancelButton = new JButton("Cancel");
-        cancelButton.setBackground(new Color(0, 0, 139)); // Dark Blue
-//        cancelButton.setForeground(Color.WHITE);
-//        cancelButton.setOpaque(true);
-//        cancelButton.setBorderPainted(false);
         cancelButton.addActionListener(e -> handleCancelButtonClick());
         buttonPanel.add(cancelButton);
 
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
         buttonPanel.setBackground(Color.BLACK);
         add(buttonPanel, BorderLayout.SOUTH);
-
-        pack();
-        setLocationRelativeTo(getParent());
     }
 
     private void handleOkButtonClick() {
@@ -90,5 +93,14 @@ public class InputDialog extends JDialog {
 
     public String getInputString(){
         return isCanceled ? "" : inputField.getText();
+    }
+
+    public void setFontForAllComponents(Container container, Font font) {
+        for (Component c : container.getComponents()) {
+            c.setFont(font);
+            if (c instanceof Container) {
+                setFontForAllComponents((Container) c, font);
+            }
+        }
     }
 }

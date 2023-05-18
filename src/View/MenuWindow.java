@@ -1,7 +1,10 @@
 package View;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 
 public class MenuWindow extends JFrame{
 
@@ -23,12 +26,36 @@ public class MenuWindow extends JFrame{
     public void showMenu() {
         setTitle("Pacman - Main Menu");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(300, 200);
+        setSize(500, 500);
+
+        // Create a JLayeredPane
+        JLayeredPane layeredPane = new JLayeredPane();
+        layeredPane.setSize(new Dimension(500, 500));
+        setContentPane(layeredPane);
+
+        try {
+            Image decorativeImage = ImageIO.read(new File("src/Images/pacman-for-menu.png"));
+            Image resizedImage = decorativeImage.getScaledInstance(this.getWidth(), this.getHeight(), Image.SCALE_DEFAULT);
+            ImageIcon imageIcon = new ImageIcon(resizedImage);
+            JLabel decorativeLabel = new JLabel(imageIcon);
+
+            // Set the position to the bottom right
+            int x = getWidth() - imageIcon.getIconWidth();
+            int y = getHeight() - imageIcon.getIconHeight() - 25; // Application header compensation
+            decorativeLabel.setBounds(x, y, imageIcon.getIconWidth(), imageIcon.getIconHeight());
+
+            // Add to layer 0 (background)
+            layeredPane.add(decorativeLabel, 0);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         JPanel mainMenuPanel = new JPanel();
-        mainMenuPanel.setLayout(new GridLayout(3, 1));
+        mainMenuPanel.setLayout(new BoxLayout(mainMenuPanel, BoxLayout.Y_AXIS));
+        mainMenuPanel.setBackground(Color.BLACK);
 
         JButton newGameButton = new JButton("New Game");
+        styleButton(newGameButton);
         newGameButton.addActionListener(e -> {
             rows = promptBoardSize("Enter the number of rows (10 to 100):");
             columns = promptBoardSize("Enter the number of columns (10 to 100):");
@@ -40,20 +67,43 @@ public class MenuWindow extends JFrame{
         });
 
         JButton highScoresButton = new JButton("High Scores");
+        styleButton(highScoresButton);
         highScoresButton.addActionListener(e -> {
             highScore = true;
         });
 
         JButton exitButton = new JButton("Exit");
+        styleButton(exitButton);
         exitButton.addActionListener(e -> exit = true);
 
         mainMenuPanel.add(newGameButton);
+        mainMenuPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         mainMenuPanel.add(highScoresButton);
+        mainMenuPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         mainMenuPanel.add(exitButton);
 
-        add(mainMenuPanel);
+        // Set the position and size of the menu panel
+        mainMenuPanel.setBounds(0, 0, getWidth(), getHeight() - 20);
+
+        // Add to layer 1 (foreground)
+        layeredPane.add(mainMenuPanel, 1);
+
         setLocationRelativeTo(null);
         setVisible(true);
+    }
+
+    private void styleButton(JButton button) {
+        // Use custom font
+        try {
+            Font customFont = Font.createFont(Font.TRUETYPE_FONT, new File("src/Font/emulogic.ttf")).deriveFont(24f);
+            button.setFont(customFont);
+        } catch (IOException | FontFormatException e) {
+            e.printStackTrace();
+        }
+        button.setForeground(Color.WHITE);
+        button.setBackground(Color.BLACK);
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
     }
 
     public boolean getNewGame(){
