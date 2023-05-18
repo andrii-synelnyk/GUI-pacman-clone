@@ -70,7 +70,7 @@ public class A_GameModel {
         //System.out.println(eatableCellsRemaining);
 
         // Create and place enemies on the board
-        int numberOfEnemies = 5; // Set the desired number of enemies
+        int numberOfEnemies = calcNumberOfEnemies(rows, columns); // Set the desired number of enemies
         for (int i = 0; i < numberOfEnemies; i++) {
             enemy = new Enemy(gameBoard);
             GameBoard.Cell emptyCell = gameBoard.getEmptyCellInTheMiddle();
@@ -379,6 +379,17 @@ public class A_GameModel {
             GameBoard.Cell emptyCell = gameBoard.getEmptyCellInTheMiddle();
             gameBoard.setCharacterCell(enemy, emptyCell.getRow(), emptyCell.getColumn(), enemy.getType());
         }
+    }
+
+    public int calcNumberOfEnemies(int rows, int columns){
+        int cells = rows * columns;
+
+        if (cells <= 144) return 1;
+        else if (cells <= 256) return 2;
+        else if (cells <= 441) return 4;
+        else if (cells <= 1100) return 7;
+        else if (cells <= 1600) return 9;
+        return 10;
     }
 
     public int getLivesRemaining(){
