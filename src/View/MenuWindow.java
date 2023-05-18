@@ -41,7 +41,7 @@ public class MenuWindow extends JFrame{
 
             // Set the position to the bottom right
             int x = getWidth() - imageIcon.getIconWidth();
-            int y = getHeight() - imageIcon.getIconHeight() - 25; // Application header compensation
+            int y = getHeight() - imageIcon.getIconHeight() - 25; // Application header height (change for Windows)
             decorativeLabel.setBounds(x, y, imageIcon.getIconWidth(), imageIcon.getIconHeight());
 
             // Add to layer 0 (background)
@@ -83,7 +83,7 @@ public class MenuWindow extends JFrame{
         mainMenuPanel.add(exitButton);
 
         // Set the position and size of the menu panel
-        mainMenuPanel.setBounds(0, 0, getWidth(), getHeight() - 20);
+        mainMenuPanel.setBounds(0, 0, getWidth(), getHeight() - 20); // Application header height (change for Windows)
 
         // Add to layer 1 (foreground)
         layeredPane.add(mainMenuPanel, 1);

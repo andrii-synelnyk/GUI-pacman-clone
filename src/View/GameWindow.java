@@ -34,7 +34,7 @@ public class GameWindow extends JFrame {
 
         // Import custom font
         try {
-            customFont = Font.createFont(Font.TRUETYPE_FONT, new File("src/Font/emulogic.ttf")).deriveFont(20f);
+            customFont = Font.createFont(Font.TRUETYPE_FONT, new File("src/Font/emulogic.ttf")).deriveFont(12f); // Changed for lower resolution
         } catch (IOException | FontFormatException e) {
             e.printStackTrace();
         }

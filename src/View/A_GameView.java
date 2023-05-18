@@ -45,8 +45,8 @@ public class A_GameView {
 
     private int calculateImageSize(int rows, int columns) {
         // Replace these constants with the desired dimensions of your game view
-        final int gameViewWidth = 1000;
-        final int gameViewHeight = 1000;
+        final int gameViewWidth = 600; // Changed for lower resolution
+        final int gameViewHeight = 600; // Changed for lower resolution
 
         int widthPerCell = gameViewWidth / columns;
         int heightPerCell = gameViewHeight / rows;
@@ -58,7 +58,7 @@ public class A_GameView {
     private int calculateNewImageSize(int rows, int columns){
         // Replace these constants with the desired dimensions of your game view
         final int gameViewWidth = gameWindow.getWidth();
-        final int gameViewHeight = gameWindow.getHeight() - gameWindow.getHeightOfTopPanel() - 30; // 30 is height of top app bar (depends on resolution of the screen and operating system)
+        final int gameViewHeight = gameWindow.getHeight() - gameWindow.getHeightOfTopPanel() - 30; // Application header height (change for Windows)
 
         int widthPerCell = gameViewWidth / columns;
         int heightPerCell = gameViewHeight / rows;
@@ -83,7 +83,7 @@ public class A_GameView {
     public void keepAspectRatio(){
         // Calculate new width and height based on aspect ratio
         int newWidth = gameWindow.getWidth();
-        int newHeight = (int) Math.round(newWidth * aspectRatio) + gameWindow.getHeightOfTopPanel() + 30; // 30 is height of top app bar (depends on resolution of the screen and operating system)
+        int newHeight = (int) Math.round(newWidth * aspectRatio) + gameWindow.getHeightOfTopPanel() + 30; // Application header height (change for Windows)
 
         // Set the new size while maintaining aspect ratio
         gameWindow.setSize(newWidth, newHeight);
@@ -144,7 +144,7 @@ public class A_GameView {
     public void setFontSize() {
         int defaultImageSize = calculateImageSize(numberOfRows, numberOfColumns);
         double scaleFactor = (double) imageSize / defaultImageSize;
-        int fontSize = (int) (20 * scaleFactor);
+        int fontSize = (int) (12 * scaleFactor); // Changed for lower resolution
         gameWindow.setFontSize(fontSize);
     }
 
