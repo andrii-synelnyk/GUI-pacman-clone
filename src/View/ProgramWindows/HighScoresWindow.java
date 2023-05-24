@@ -1,13 +1,13 @@
 package View.ProgramWindows;
 
-import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
-public class HighScoresWindow extends JFrame{
+import javax.swing.*;
 
+public class HighScoresWindow extends JFrame{
     private Map<String, Integer> sortedHighScores;
     private Font customFont;
 
@@ -29,7 +29,7 @@ public class HighScoresWindow extends JFrame{
 
     public void showHighScores() {
         setTitle("Pacman - High Scores");
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Change to DISPOSE_ON_CLOSE
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setMinimumSize(new Dimension(300, 500));
 
         // Create the DefaultListModel

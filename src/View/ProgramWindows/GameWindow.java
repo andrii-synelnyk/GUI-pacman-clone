@@ -1,19 +1,17 @@
 package View.ProgramWindows;
 
-import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
+import javax.swing.*;
+
 public class GameWindow extends JFrame {
     private JTable gameTable;
-
     private JLabel timeLabel;
     private JLabel scoreLabel;
     private JLabel livesLabel;
-
     private JPanel timeScorePanel;
-
     private Font customFont;
 
     public GameWindow(JTable gameBoard) {
@@ -67,7 +65,7 @@ public class GameWindow extends JFrame {
         timeLabel.setForeground(Color.WHITE);
 
         timeScorePanel = new JPanel();
-        timeScorePanel.setLayout(new GridLayout(1, 3)); // can remove rows and cols, do not do anything
+        timeScorePanel.setLayout(new GridLayout(1, 3));
 
         JPanel livesPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         livesPanel.add(livesLabel);

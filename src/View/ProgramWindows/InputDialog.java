@@ -1,18 +1,17 @@
 package View.ProgramWindows;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 
+import javax.swing.*;
+
 public class InputDialog extends JDialog {
     private JTextField inputField;
     private boolean isCanceled;
-
     private String dialogTitle;
-
     private Font customFont;
 
     public InputDialog(JFrame parent, String title) {
@@ -34,6 +33,7 @@ public class InputDialog extends JDialog {
         } catch (IOException | FontFormatException e) {
             e.printStackTrace();
         }
+
         setFontForAllComponents(this, customFont);
         pack();
         setLocationRelativeTo(null);

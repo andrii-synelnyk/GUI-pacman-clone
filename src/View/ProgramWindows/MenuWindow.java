@@ -1,17 +1,16 @@
 package View.ProgramWindows;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
-public class MenuWindow extends JFrame{
+import javax.swing.*;
+import javax.imageio.ImageIO;
 
+public class MenuWindow extends JFrame{
     private boolean newGame;
     private boolean highScore;
     private boolean exit;
-
     private int rows;
     private int columns;
 
@@ -106,6 +105,23 @@ public class MenuWindow extends JFrame{
         button.setBorderPainted(false);
     }
 
+    private int promptBoardSize(String message) {
+        int size = 0;
+        while (size < 10 || size > 100) {
+            InputDialog dialog = new InputDialog(this, message);
+            dialog.setVisible(true);
+            try {
+                size = dialog.getInputInt();
+                if (size == -1) { // if cancel button is pressed
+                    return -1; // indicate that there was no input
+                }
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Invalid input. Please enter a number between 10 and 100.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        return size;
+    }
+
     public boolean getNewGame(){
         return newGame;
     }
@@ -132,22 +148,5 @@ public class MenuWindow extends JFrame{
 
     public int getColumnsInput(){
         return columns;
-    }
-
-    private int promptBoardSize(String message) {
-        int size = 0;
-        while (size < 10 || size > 100) {
-            InputDialog dialog = new InputDialog(this, message);
-            dialog.setVisible(true);
-            try {
-                size = dialog.getInputInt();
-                if (size == -1) { // if cancel button is pressed
-                    return -1; // indicate that there was no input
-                }
-            } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(null, "Invalid input. Please enter a number between 10 and 100.", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-        return size;
     }
 }
