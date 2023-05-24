@@ -10,6 +10,7 @@ import javax.swing.*;
 
 import Enum.*;
 
+import Model.CharacterModels.Character;
 import Model.CharacterModels.Enemy;
 import Model.CharacterModels.Pacman;
 import Model.GameBoardLogic.GameBoard;
@@ -94,7 +95,7 @@ public class GameModel {
         Thread moveCharacterThread = new Thread(() -> {
             while (!gameOver && !characterWhoCalled.isFrozen()) {
 
-                if (characterWhoCalled.direction != null) {
+                if (characterWhoCalled.getDirection() != null) {
                     Point newPosition = getNewPosition(characterWhoCalled);
                     int newRow = newPosition.x;
                     int newCol = newPosition.y;
@@ -109,7 +110,7 @@ public class GameModel {
                 checkForDeathOrGameOver(); // Check for game over after updating the character position
 
                 try {
-                    Thread.sleep(characterWhoCalled.timeInterval); // Wait till the next move
+                    Thread.sleep(characterWhoCalled.getTimeInterval()); // Wait till the next move
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -124,7 +125,7 @@ public class GameModel {
         int newRow = gameBoard.getCharacterCell(characterWhoCalled).getRow();
         int newCol = gameBoard.getCharacterCell(characterWhoCalled).getColumn();
 
-        switch (characterWhoCalled.direction) {
+        switch (characterWhoCalled.getDirection()) {
             case UP -> newRow -= 1;
             case DOWN -> newRow += 1;
             case LEFT -> newCol -= 1;
@@ -257,9 +258,9 @@ public class GameModel {
         if(type.equals("speed") && !gameOver){
             Thread speedPowerUpThread = new Thread(() -> {
                 try {
-                    pacman.timeInterval = 150;
+                    pacman.setTimeInterval(150);
                     Thread.sleep(7000);
-                    pacman.timeInterval = 300;
+                    pacman.setTimeInterval(300);
                 }catch (InterruptedException e) {
                     System.out.println("Speed power-up thread was interrupted and will now end.");
                 }

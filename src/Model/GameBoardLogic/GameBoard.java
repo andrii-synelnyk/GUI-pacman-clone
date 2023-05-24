@@ -5,7 +5,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import Enum.CellContent;
 
-import Model.Character;
+import Model.CharacterModels.Character;
 import Model.CharacterModels.Enemy;
 
 public class GameBoard {

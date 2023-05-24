@@ -1,4 +1,4 @@
-package Model;
+package Model.CharacterModels;
 
 import Enum.CellContent;
 import Enum.Direction;
@@ -17,6 +17,14 @@ public abstract class Character {
         direction = Direction.RIGHT;
 
         this.timeInterval = 300; // default time interval. Overwritten by children
+    }
+
+    public int getTimeInterval(){
+        return timeInterval;
+    }
+
+    public void setTimeInterval(int timeInterval){
+        this.timeInterval = timeInterval;
     }
 
     public abstract CellContent getType();

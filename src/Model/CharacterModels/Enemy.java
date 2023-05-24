@@ -6,7 +6,6 @@ import java.util.concurrent.ThreadLocalRandom;
 import Enum.Direction;
 import Enum.CellContent;
 
-import Model.Character;
 import Model.GameBoardLogic.GameBoard;
 import Model.GameBoardLogic.GameBoard.Cell;
 
