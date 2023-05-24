@@ -80,29 +80,30 @@ public class GameBoard {
 
         // Generate maze using randomized Prim's algorithm
         Random random = new Random();
-        List<Cell> frontier = new ArrayList<>();
-        int startRow = random.nextInt(rows / 2) * 2 + 1;
-        int startCol = random.nextInt(columns / 2) * 2 + 1;
+        List<Cell> boundSoFar = new ArrayList<>();
+        int startRow = random.nextInt(rows / 2) * 2 + 1; // 2k + 1 for odd row
+        int startCol = random.nextInt(columns / 2) * 2 + 1; // 2k + 1 for odd column
         Cell startCell = new Cell(startRow, startCol, CellContent.EMPTY);
-        board[startRow][startCol] = startCell;
-        frontier.add(startCell);
+        board[startRow][startCol] = startCell; // putting cell on the board
+        boundSoFar.add(startCell);
 
         int[][] directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
 
-        while (!frontier.isEmpty()) {
-            // Choose a random cell from the frontier list
-            Cell current = frontier.remove(random.nextInt(frontier.size()));
+        while (!boundSoFar.isEmpty()) {
+            // Choose a random cell from the boundSoFar list
+            Cell current = boundSoFar.remove(random.nextInt(boundSoFar.size())); // .remove() also returns the cell
 
-            // Look for a neighboring cell in the maze
+            // Look into 4 directions for each boundSoFar cell
             for (int[] direction : directions) {
                 int newRow = current.getRow() + direction[0] * 2;
                 int newCol = current.getColumn() + direction[1] * 2;
 
+                // If new cell is inbounds of board and is currently a wall, make it empty and make empty cell between current and new
                 if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < columns && board[newRow][newCol].getContent() == CellContent.WALL) {
-                    // Add the neighboring cell to the frontier and connect it to the current cell
+                    // Make newCell empty and add it to boundSoFar list
                     Cell newCell = new Cell(newRow, newCol, CellContent.EMPTY);
                     board[newRow][newCol] = newCell;
-                    frontier.add(newCell);
+                    boundSoFar.add(newCell);
 
                     // Remove the wall between the current cell and the new cell
                     board[current.getRow() + direction[0]][current.getColumn() + direction[1]].setContent(CellContent.EMPTY);
