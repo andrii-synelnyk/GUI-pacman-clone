@@ -1,17 +1,14 @@
 package View.CharacterViews;
 
 import java.awt.*;
+
 import Enum.Direction;
-import View.CharacterViews.CharacterView;
 
 public class PacmanView extends CharacterView {
-
     private int mouthDegree = 0;
     private boolean mouthFullyOpened = true;
-
     Direction pacmanDirection = Direction.UP;
     Thread pacmanViewThread;
-
 
     public PacmanView(int size) {
         super(size);

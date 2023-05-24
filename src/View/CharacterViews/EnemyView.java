@@ -1,21 +1,17 @@
 package View.CharacterViews;
 
-import View.CharacterViews.CharacterView;
-
 import java.awt.*;
 
 public class EnemyView extends CharacterView {
-
     private Color enemyColor;
-
     private int animationFrame = 1;
     Thread enemyViewThread;
 
     public EnemyView(int size) {
         super(size);
-
         this.enemyColor = Color.red;
 
+        // Thread that changes animation frames for enemy legs every 300ms
         enemyViewThread = new Thread(() -> {
             while (isRunning) {
                 try {
@@ -34,13 +30,12 @@ public class EnemyView extends CharacterView {
 
     @Override
     public void paintIcon(Component c, Graphics g, int x, int y) {
-
         g.setColor(enemyColor);
 
         // Draw the round body of the ghost
         g.fillRoundRect(x, y, width, (int) (height * 0.85), width / 4, height / 4);
 
-        // Draw the "legs" of the ghost
+        // Draw the "legs" of the ghost (change image of legs depending on frame)
         if (animationFrame == 1) {
             for (int i = 0; i < 4; i++) {
                 g.fillArc(x + i * width / 4, y + height / 2, width / 4, height / 2, 0, -180);

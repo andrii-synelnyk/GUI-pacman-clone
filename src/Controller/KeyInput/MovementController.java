@@ -3,8 +3,9 @@ package Controller.KeyInput;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import Controller.GameController;
 import Enum.Direction;
+
+import Controller.GameController;
 
 public class MovementController implements KeyListener {
     private final GameController gameController;

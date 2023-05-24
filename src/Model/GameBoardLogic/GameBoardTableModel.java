@@ -1,6 +1,7 @@
 package Model.GameBoardLogic;
 
 import javax.swing.table.AbstractTableModel;
+
 import Enum.CellContent;
 
 public class GameBoardTableModel extends AbstractTableModel {

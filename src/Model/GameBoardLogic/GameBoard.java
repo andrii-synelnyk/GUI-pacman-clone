@@ -1,19 +1,18 @@
 package Model.GameBoardLogic;
 
-import Enum.CellContent;
-import Model.Character;
-import Model.CharacterModels.Enemy;
-
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+
+import Enum.CellContent;
+
+import Model.Character;
+import Model.CharacterModels.Enemy;
 
 public class GameBoard {
     private int rows;
     private int columns;
     private Cell[][] board;
-
     private HashMap<Character, Cell> characterCells;
-
     public int eatableCellsNumber;
 
     // Inner class representing a cell in the game board
@@ -43,7 +42,6 @@ public class GameBoard {
             this.contentUnderneath = CellContent.EMPTY;
         }
 
-        // Getters and setters for row, column, and content
         public int getRow(){
             return row;
         }
@@ -139,29 +137,30 @@ public class GameBoard {
 
     public void removeDeadEnds(){
         int[][] directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
-            for (int row = 1; row < rows - 1; row++) {
-                for (int col = 1; col < columns - 1; col++) {
-                    if (board[row][col].getContent() == CellContent.EMPTY) {
-                        int wallCount = 0;
-                        ArrayList<Cell> wallCellsAround = new ArrayList<>();
 
-                        for (int[] direction : directions) {
-                            int newRow = row + direction[0];
-                            int newCol = col + direction[1];
+        for (int row = 1; row < rows - 1; row++) {
+            for (int col = 1; col < columns - 1; col++) {
+                if (board[row][col].getContent() == CellContent.EMPTY) {
+                    int wallCount = 0;
+                    ArrayList<Cell> wallCellsAround = new ArrayList<>();
 
-                            if (board[newRow][newCol].getContent() == CellContent.WALL) {
-                                wallCount++;
-                                wallCellsAround.add(board[newRow][newCol]);
-                            }
-                        }
+                    for (int[] direction : directions) {
+                        int newRow = row + direction[0];
+                        int newCol = col + direction[1];
 
-                        if (wallCount == 3) {
-                            int indexOfCellToChange = ThreadLocalRandom.current().nextInt(0, wallCellsAround.size());
-                            Cell cellToChange = wallCellsAround.get(indexOfCellToChange);
-                            board[cellToChange.getRow()][cellToChange.getColumn()] = new Cell(cellToChange.getRow(), cellToChange.getColumn(), CellContent.EMPTY);
+                        if (board[newRow][newCol].getContent() == CellContent.WALL) {
+                            wallCount++;
+                            wallCellsAround.add(board[newRow][newCol]);
                         }
                     }
+
+                    if (wallCount == 3) {
+                        int indexOfCellToChange = ThreadLocalRandom.current().nextInt(0, wallCellsAround.size());
+                        Cell cellToChange = wallCellsAround.get(indexOfCellToChange);
+                        board[cellToChange.getRow()][cellToChange.getColumn()] = new Cell(cellToChange.getRow(), cellToChange.getColumn(), CellContent.EMPTY);
+                    }
                 }
+            }
         }
     }
 

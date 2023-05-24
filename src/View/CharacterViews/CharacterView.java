@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 
 public class CharacterView implements Icon {
-
     protected int width;
     protected int height;
     protected boolean isRunning = true;
