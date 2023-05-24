@@ -67,9 +67,7 @@ public class MenuWindow extends JFrame{
 
         JButton highScoresButton = new JButton("High Scores");
         styleButton(highScoresButton);
-        highScoresButton.addActionListener(e -> {
-            highScore = true;
-        });
+        highScoresButton.addActionListener(e -> highScore = true);
 
         JButton exitButton = new JButton("Exit");
         styleButton(exitButton);

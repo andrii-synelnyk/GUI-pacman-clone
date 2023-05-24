@@ -79,10 +79,10 @@ public class GameModel {
         }
 
         // Start moving characters
-        characters.forEach(character -> {moveCharacter(character);});
+        characters.forEach(this::moveCharacter);
 
         // Start spawning power-ups by enemies
-        enemies.forEach(enemy -> {spawnPowerUps(enemy);});
+        enemies.forEach(this::spawnPowerUps);
 
         startTimer();
     }
