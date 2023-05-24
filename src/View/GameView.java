@@ -1,7 +1,14 @@
 package View;
 
+import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.util.Map;
+
 import javax.swing.*;
+
 import Enum.Direction;
+
 import View.CharacterViews.EnemyView;
 import View.CharacterViews.PacmanView;
 import View.ProgramWindows.GameWindow;
@@ -9,13 +16,7 @@ import View.ProgramWindows.HighScoresWindow;
 import View.ProgramWindows.InputDialog;
 import View.ProgramWindows.MenuWindow;
 
-import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.util.Map;
-
 public class GameView {
-
     GameWindow gameWindow;
     MenuWindow menu;
     int imageSize;
@@ -38,6 +39,8 @@ public class GameView {
 
         gameWindow = new GameWindow(gameBoardForView);
         aspectRatio = (double) numberOfRows / numberOfColumns;
+
+        // Check when the window is resized
         gameWindow.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
@@ -49,26 +52,26 @@ public class GameView {
     }
 
     private int calculateImageSize(int rows, int columns) {
-        // Replace these constants with the desired dimensions of your game view
+        // Desired size of Game Window
         final int gameViewWidth = 600; // Changed for lower resolution
         final int gameViewHeight = 600; // Changed for lower resolution
 
         int widthPerCell = gameViewWidth / columns;
         int heightPerCell = gameViewHeight / rows;
 
-        // Choose the smaller dimension to fit both width and height
+        // Choose the smaller dimension for cases when the width and height are different
         return Math.min(widthPerCell, heightPerCell);
     }
 
     private int calculateNewImageSize(int rows, int columns){
-        // Replace these constants with the desired dimensions of your game view
+        // Calculating image size when Game Window is resized
         final int gameViewWidth = gameWindow.getWidth();
         final int gameViewHeight = gameWindow.getHeight() - gameWindow.getHeightOfTopPanel() - 30; // Application header height (change for Windows)
 
         int widthPerCell = gameViewWidth / columns;
         int heightPerCell = gameViewHeight / rows;
 
-        // Choose the smaller dimension to fit both width and height
+        // Choose the smaller dimension for cases when the width and height are different
         return Math.min(widthPerCell, heightPerCell);
     }
 
@@ -83,6 +86,7 @@ public class GameView {
     public void setNumberOfRows(int numberOfRows){
         this.numberOfRows = numberOfRows;
     }
+
     public void setNumberOfColumns(int numberOfColumns) {this.numberOfColumns = numberOfColumns; }
 
     public void keepAspectRatio(){
@@ -107,7 +111,7 @@ public class GameView {
     public JTable configGameBoard(JTable gameTable){
 
         gameTable.setRowHeight(imageSize); // Set the desired row height
-        for (int i = 0; i < gameTable.getColumnCount(); i++){
+        for (int i = 0; i < gameTable.getColumnCount(); i++){ // Set the desired column width
             gameTable.getColumnModel().getColumn(i).setPreferredWidth(imageSize);
             gameTable.getColumnModel().getColumn(i).setMinWidth(imageSize);
             gameTable.getColumnModel().getColumn(i).setMaxWidth(imageSize);
@@ -149,7 +153,7 @@ public class GameView {
     }
 
     public void showHighScoresWindow(Map<String, Integer> sortedHighScores){
-        HighScoresWindow highScoresWindow = new HighScoresWindow(sortedHighScores);
+        new HighScoresWindow(sortedHighScores);
     }
 
     public String showHighScoresInputWindow(){

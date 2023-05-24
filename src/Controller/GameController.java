@@ -1,30 +1,29 @@
 package Controller;
 
-import Controller.KeyInput.CompoundShortcutController;
-import Controller.KeyInput.MovementController;
-import Model.GameModel;
-import Model.HighScoreLogic.HighScore;
-import Model.HighScoreLogic.HighScoreList;
-import View.GameView;
-
-import javax.swing.*;
-
-import Enum.*;
-import View.ProgramWindows.MenuWindow;
-
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import javax.swing.*;
+
+import Enum.*;
+
+import Controller.KeyInput.CompoundShortcutController;
+import Controller.KeyInput.MovementController;
+
+import Model.GameModel;
+import Model.HighScoreLogic.HighScore;
+import Model.HighScoreLogic.HighScoreList;
+
+import View.GameView;
+import View.ProgramWindows.MenuWindow;
+
 public class GameController {
     private final GameModel gameModel;
     private final GameView gameView;
-
     private HashSet<Thread> controllerThreads = new HashSet<>();
-
     MovementController movementController;
     CompoundShortcutController compoundShortcutController;
-
     private boolean needToAskForHighscoreInput = true;
 
     public GameController(GameModel gameModel, GameView gameView) {
@@ -99,7 +98,7 @@ public class GameController {
                 int lives = gameModel.getLivesRemaining();
                 int score = gameModel.getScore();
                 int time = gameModel.getTime();
-                //System.out.println("redraw");
+
                 SwingUtilities.invokeLater(() -> {
                     gameView.getGameWindow().updateLives(lives);
                     gameView.getGameWindow().updateTime(time);
@@ -161,7 +160,7 @@ public class GameController {
 
     public void stop(){
         // remove checkForGameOverThread from controllerThreads, because it is the thread that is calling this method,
-        // therefore, it cannot join itself. But it because gameOver is false now, it will exit the loop and terminate anyway
+        // therefore, it cannot join itself. But because gameOver is false now, it will exit the loop and terminate anyway
         Thread currentThread = Thread.currentThread();
         controllerThreads.remove(currentThread);
 
@@ -175,28 +174,23 @@ public class GameController {
     }
 
     public void gameOver(){
-        System.out.println("started game over method");
-
         askForHighScoreInput();
 
         gameView.stopCharacterViewThreads();
         gameModel.stop();
         this.stop();
-
-        System.out.println("finished game over method");
     }
 
 
     public void interruptWithShortcut(){
-        System.out.println("started interrupt method");
         if (!gameModel.getGameOver()) gameModel.setGameOver(true);
 
         needToAskForHighscoreInput = false; // because it is not regular game over
 
+        // Close Game Window and show Menu
         gameView.closeGameWindow();
         gameView.getMenuWindow().setVisible(true);
         listenToMenuActions(); // launch thread listening to menu actions
-        System.out.println("finished interrupt method");
     }
 
     public void showHighScores(){
@@ -217,7 +211,7 @@ public class GameController {
     public void askForHighScoreInput(){
         if (needToAskForHighscoreInput) {
             String name = gameView.showHighScoresInputWindow();
-            gameModel.loadOrCreateHighScoreList();
+            gameModel.loadOrCreateHighScoreList(); // in case there was still no high-score file created
             gameModel.getHighScoreList().addHighScore(new HighScore(name, gameModel.getScore()));
             gameModel.getHighScoreList().saveHighScoresToFile("high_scores.ser");
             gameView.closeGameWindow();

@@ -1,14 +1,15 @@
 package Model;
 
-
-import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.concurrent.ThreadLocalRandom;
 
+import javax.swing.*;
+
 import Enum.*;
+
 import Model.CharacterModels.Enemy;
 import Model.CharacterModels.Pacman;
 import Model.GameBoardLogic.GameBoard;
@@ -19,16 +20,11 @@ public class GameModel {
     private GameBoard gameBoard;
     private GameBoardTableModel gameBoardTableModel;
     private JTable gameTable;
-
     private volatile boolean gameOver = false;
-
     private Pacman pacman;
-
     private Enemy enemy;
-
     private ArrayList<Enemy> enemies;
     private HashSet<Character> characters;
-
     private HashSet<Thread> modelThreads = new HashSet<>();
 
     // For panel on top
@@ -42,9 +38,7 @@ public class GameModel {
     // For power-ups
     private double scoreMultiplier = 1;
     private boolean invincible = false;
-
     private int eatableCellsRemaining;
-
     private HashSet<Thread> threadsForInterruption = new HashSet<>(); // threads which should be interrupted when game ends, not to (exist/cause bugs) in the next game
 
     public GameModel() {
@@ -91,8 +85,6 @@ public class GameModel {
 
         startTimer();
     }
-
-    // Add methods to manage game CellContents (player, enemies, power-ups, etc.)
 
     public GameBoard getGameBoard() {
         return gameBoard;
@@ -237,10 +229,7 @@ public class GameModel {
     public void spawnPowerUps(Enemy enemy){
         Thread spawnPowerUpThread = new Thread(() -> {
             try {
-                while (!gameOver) { // this thread is interrupted when the game stops,
-                    // because if I quickly end and start game again within 5 secs of this thread's sleep, so gameOver bool will be true when this thread wakes from sleep
-                    // it will still think that the game is running and try to find cell for an enemy that does not exist anymore
-                    // So I interrupt it if it's sleeping when the game ends, for it not to wake at all
+                while (!gameOver) { // this thread is interrupted when the game stops
                     Thread.sleep(5000);
 
                     int ifToSpawnUpgrade = ThreadLocalRandom.current().nextInt(1, 100 + 1);
@@ -263,7 +252,6 @@ public class GameModel {
         threadsForInterruption.add(spawnPowerUpThread);
         modelThreads.add(spawnPowerUpThread);
     }
-
 
     public void usePowerUp(String type){
         if(type.equals("speed") && !gameOver){
@@ -327,16 +315,9 @@ public class GameModel {
         }
     }
 
+    // Reset all Model logic
     public void stop(){
-        // Stop all running threads
-//        for (Thread thread : modelThreads){
-//            try{
-//                thread.join();
-//            }catch (Exception e){
-//                e.printStackTrace();
-//            }
-//        }
-
+        // Interrupt power-up threads to prevent bags when they can still exist in the next game
         for (Thread t : threadsForInterruption) {
             t.interrupt();
         }
