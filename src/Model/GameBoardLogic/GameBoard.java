@@ -29,15 +29,15 @@ public class GameBoard {
             this.contentUnderneath = content;
         }
 
-        public CellContent getContent() {
+        public synchronized CellContent getContent() {
             return content;
         }
 
-        public void setContent(CellContent content) {
+        public synchronized void setContent(CellContent content) {
             this.content = content;
         }
 
-        public void setEaten(){
+        public synchronized void setEaten(){
             this.content = CellContent.EMPTY;
             this.contentUnderneath = CellContent.EMPTY;
         }
@@ -165,16 +165,16 @@ public class GameBoard {
         }
     }
 
-    public void setCharacterCell(Character character, int row, int column, CellContent content) {
+    public synchronized void setCharacterCell(Character character, int row, int column, CellContent content) {
         board[row][column].setContent(content);
         characterCells.put(character, board[row][column]);
     }
 
-    public Cell getCharacterCell(Character character) {
+    public synchronized Cell getCharacterCell(Character character) {
         return characterCells.get(character);
     }
 
-    public Cell getCell(int row, int column){
+    public synchronized Cell getCell(int row, int column){
         return board[row][column];
     }
 
@@ -207,7 +207,7 @@ public class GameBoard {
         this.board = new Cell[rows][columns];
     }
 
-    public void placePowerUp(Enemy enemyWhoCalled, CellContent powerUpType){
+    public synchronized void placePowerUp(Enemy enemyWhoCalled, CellContent powerUpType){
         getCharacterCell(enemyWhoCalled).setContentUnderneath(powerUpType);
     }
 
